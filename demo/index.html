@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KotobaLink Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">KL</div>
+          <div>
+            <div class="brand-title">KotobaLink</div>
+            <div class="brand-subtitle">Demo Prototype</div>
+          </div>
+        </div>
+        <div class="role-switcher">
+          <div class="role-title">后台角色切换</div>
+          <div class="role-options">
+            <button class="role-btn active" data-role="admin">管理员</button>
+            <button class="role-btn" data-role="operator">教务/运营</button>
+            <button class="role-btn" data-role="teacher">教师</button>
+          </div>
+        </div>
+        <nav class="nav">
+          <button class="nav-btn active" data-view="overview" data-roles="all">演示总览</button>
+          <button class="nav-btn" data-view="admin-app" data-roles="admin,operator,teacher">后台系统体验</button>
+          <button class="nav-btn" data-view="mini-app">小程序体验</button>
+        </nav>
+      </aside>
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <h1 id="page-title">演示总览</h1>
+            <p id="page-subtitle">后天可展示的课程服务闭环 Demo</p>
+            <div id="page-demo-tip" class="demo-tip" style="display:none;"></div>
+          </div>
+          <div class="story-pill">统一样例学员：小林美咲 / 日语初级精品班</div>
+        </header>
+        <section id="view-root"></section>
+      </main>
+    </div>
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+  </html>
