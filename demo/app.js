@@ -29,6 +29,13 @@ function tt(zh, ja) {
   return state.locale === "ja" ? ja : zh;
 }
 
+function tl(value) {
+  if (value && typeof value === "object" && "zh" in value && "ja" in value) {
+    return state.locale === "ja" ? value.ja : value.zh;
+  }
+  return value;
+}
+
 function applyStaticLocale() {
   document.documentElement.lang = state.locale === "ja" ? "ja" : "zh-CN";
   const dict = I18N[state.locale];
@@ -340,9 +347,9 @@ const views = {
         <div class="card highlight">
           <div class="card-title">统一演示故事</div>
           <div class="list">
-            <div class="list-item"><div class="list-title">${data.student.name}</div><div class="muted">${data.student.course} / ${data.student.className}</div></div>
-            <div class="list-item"><div class="list-title">会员状态</div><div class="muted">${data.student.membership}</div></div>
-            <div class="list-item"><div class="list-title">当前续费状态</div><div class="muted">${data.student.renewal}</div></div>
+            <div class="list-item"><div class="list-title">${data.student.name}</div><div class="muted">${tl(data.student.course)} / ${tl(data.student.className)}</div></div>
+            <div class="list-item"><div class="list-title">${tt("会员状态", "会員状態")}</div><div class="muted">${tl(data.student.membership)}</div></div>
+            <div class="list-item"><div class="list-title">${tt("当前续费状态", "現在の更新状態")}</div><div class="muted">${tl(data.student.renewal)}</div></div>
           </div>
         </div>
       </div>
@@ -467,49 +474,49 @@ const views = {
         <div class="card">
           <div class="card-title">${tt("教学异常提醒", "授業アラート")}</div>
           <div class="list">
-            ${followupItems().map(item => `<div class="list-item"><div class="list-title">${item.name}</div><div class="muted">${item.reason}</div></div>`).join("")}
+            ${followupItems().map(item => `<div class="list-item"><div class="list-title">${item.name}</div><div class="muted">${tl(item.reason)}</div></div>`).join("")}
           </div>
-          <div class="demo-tip">演示提示：这里专门承接班级、作业和每日任务执行情况，和线索、订单、退款分开看。</div>
+          <div class="demo-tip">${tt("这里专门承接班级、作业和每日任务执行情况，和线索、订单、退款分开看。", "ここではクラス、課題、日次タスクの実行状況を扱い、リード・注文・返金とは分けて見せます。")}</div>
         </div>
       </div>
     `,
     }),
   },
   "admin-leads": {
-    title: "后台咨询线索",
-    subtitle: "公众号咨询统一进入后台线索池",
+    title: () => tt("后台咨询线索", "バックオフィス 問い合わせリード"),
+    subtitle: () => tt("公众号咨询统一进入后台线索池", "公式アカウント経由の問い合わせを一元管理"),
     tip: "这页用来说明公众号咨询会进入后台统一跟进，而不是散在聊天里。",
     render: () => adminPage({
-      breadcrumb: "后台 / 咨询与学员 / 咨询线索",
-      title: "咨询线索池",
-      actions: ["今日新增 3", "待跟进 2"],
+      breadcrumb: tt("后台 / 咨询与学员 / 咨询线索", "バックオフィス / 相談と受講生 / 問い合わせリード"),
+      title: tt("咨询线索池", "問い合わせリード一覧"),
+      actions: [tt("今日新增 3", "本日新規 3"), tt("待跟进 2", "フォロー待ち 2")],
       permissions: {
-        admin: "可查看全部咨询线索和流转状态。",
-        operator: "可跟进咨询、记录沟通、安排试听，并承接已成交用户的后续服务。",
+        admin: tt("可查看全部咨询线索和流转状态。", "すべての問い合わせリードと進行状態を確認できます。"),
+        operator: tt("可跟进咨询、记录沟通、安排试听，并承接已成交用户的后续服务。", "問い合わせ対応、連絡記録、体験手配、成約後の継続サービスを担当します。"),
       },
       content: `
         <div class="admin-panel">
           <div class="admin-panel-head">
             <div>
-              <div class="card-title" style="margin-bottom:4px;">公众号咨询线索</div>
-              <div class="muted">所有咨询统一进入后台，便于跟进、试听安排和后续转化服务。</div>
+              <div class="card-title" style="margin-bottom:4px;">${tt("公众号咨询线索", "公式アカウント経由のリード")}</div>
+              <div class="muted">${tt("所有咨询统一进入后台，便于跟进、试听安排和后续转化服务。", "すべての問い合わせをバックオフィスへ集約し、フォロー、体験手配、成約後対応を行います。")}</div>
             </div>
             <div class="admin-toolbar">
-              <div class="tool-chip">来源：公众号</div>
-              ${state.currentRole === "operator" ? `<div class="btn">安排试听</div>` : ""}
+              <div class="tool-chip">${tt("来源：公众号", "流入元：公式アカウント")}</div>
+              ${state.currentRole === "operator" ? `<div class="btn">${tt("安排试听", "体験手配")}</div>` : ""}
             </div>
           </div>
           <div class="admin-panel-body">
             <div class="table-wrap">
               <table class="table">
-                <thead><tr><th>姓名</th><th>当前水平</th><th>学习目标</th><th>状态</th></tr></thead>
+                <thead><tr><th>${tt("姓名", "氏名")}</th><th>${tt("当前水平", "現在レベル")}</th><th>${tt("学习目标", "学習目標")}</th><th>${tt("状态", "状態")}</th></tr></thead>
                 <tbody>
                   ${data.leads.map((item) => `
                     <tr>
                       <td>${item.name}</td>
-                      <td>${item.level}</td>
-                      <td>${item.goal}</td>
-                      <td><span class="status ${item.status === "待跟进" ? "warn" : ""}">${item.status}</span></td>
+                      <td>${tl(item.level)}</td>
+                      <td>${tl(item.goal)}</td>
+                      <td><span class="status ${tl(item.status) === tt("待跟进", "要フォロー") ? "warn" : ""}">${tl(item.status)}</span></td>
                     </tr>
                   `).join("")}
                 </tbody>
@@ -518,9 +525,9 @@ const views = {
           </div>
         </div>
         <div class="cta-row">
-          ${state.currentRole === "operator" ? `<div class="btn">记录跟进</div>` : ""}
-          <div class="btn" data-action="admin-to-courses">查看推荐课程</div>
-          <div class="btn ghost" data-action="admin-to-student">查看学员档案</div>
+          ${state.currentRole === "operator" ? `<div class="btn">${tt("记录跟进", "フォロー記録")}</div>` : ""}
+          <div class="btn" data-action="admin-to-courses">${tt("查看推荐课程", "おすすめコースを見る")}</div>
+          <div class="btn ghost" data-action="admin-to-student">${tt("查看学员档案", "受講生プロフィールを見る")}</div>
         </div>
       `,
     }),
@@ -541,10 +548,10 @@ const views = {
         <div class="grid cols-2">
           ${data.membershipPlans.map((item) => `
             <div class="card">
-              <div class="card-title">${item.name}</div>
-              <div class="muted">${tt("有效期：", "有効期間：")}${item.duration}</div>
+              <div class="card-title">${tl(item.name)}</div>
+              <div class="muted">${tt("有效期：", "有効期間：")}${tl(item.duration)}</div>
               <div class="muted">${tt("价格：", "価格：")}${item.price}</div>
-              <div class="muted">${tt("权益：", "特典：")}${item.benefits}</div>
+              <div class="muted">${tt("权益：", "特典：")}${tl(item.benefits)}</div>
             </div>
           `).join("")}
         </div>
@@ -601,11 +608,11 @@ const views = {
                 <tbody>
                   ${data.courses.map((item) => `
                     <tr>
-                      <td>${item.name}</td>
-                      <td>${item.type}</td>
-                      <td>${item.duration}</td>
-                      <td>${item.benefit}</td>
-                      <td><span class="status ${item.status === "待开班" ? "warn" : ""}">${item.status}</span></td>
+                      <td>${tl(item.name)}</td>
+                      <td>${tl(item.type)}</td>
+                      <td>${tl(item.duration)}</td>
+                      <td>${tl(item.benefit)}</td>
+                      <td><span class="status ${tl(item.status) === tt("待开班", "開講待ち") ? "warn" : ""}">${tl(item.status)}</span></td>
                     </tr>
                   `).join("")}
                 </tbody>
@@ -616,7 +623,7 @@ const views = {
         <div class="split" style="margin-top:16px;">
           <div class="card">
             <div class="card-title">${state.currentRole === "admin" ? tt("课程详情摘要", "コース詳細サマリー") : tt("课程编辑示意", "コース編集イメージ")}</div>
-            <div class="muted">${tt("课程名称：", "コース名：")}${data.student.course}</div>
+            <div class="muted">${tt("课程名称：", "コース名：")}${tl(data.student.course)}</div>
             <div class="muted">${tt("课程类型：精品课程", "コース種別：上級コース")}</div>
             <div class="muted">${tt("服务周期：6 个月", "提供期間：6か月")}</div>
             <div class="muted">${tt("会员权益：购课后课程服务期内自动生效", "会員特典：購入後、コース提供期間中に自動有効化")}</div>
@@ -667,27 +674,27 @@ const views = {
             <table class="table">
               <thead><tr><th>${tt("班级", "クラス")}</th><th>${tt("课程", "コース")}</th><th>${tt("教师", "教師")}</th><th>${tt("人数", "人数")}</th><th>${tt("状态", "状態")}</th></tr></thead>
               <tbody>
-                <tr><td>${data.student.className}</td><td>${data.student.course}</td><td>${data.student.teacher}</td><td>6/8</td><td><span class="status">进行中</span></td></tr>
-                <tr><td>2026 春季 2 班</td><td>日语 0 起步基础课</td><td>佐藤老师</td><td>12/15</td><td><span class="status">进行中</span></td></tr>
-                <tr><td>会话强化夜班</td><td>日语生活会话强化班</td><td>山田老师</td><td>0/6</td><td><span class="status warn">待开班</span></td></tr>
+                <tr><td>${tl(data.student.className)}</td><td>${tl(data.student.course)}</td><td>${tl(data.student.teacher)}</td><td>6/8</td><td><span class="status">${tt("进行中", "進行中")}</span></td></tr>
+                <tr><td>${tt("2026 春季 2 班", "2026 春学期 2組")}</td><td>${tt("日语 0 起步基础课", "日本語ゼロスタート基礎コース")}</td><td>${tt("佐藤老师", "佐藤先生")}</td><td>12/15</td><td><span class="status">${tt("进行中", "進行中")}</span></td></tr>
+                <tr><td>${tt("会话强化夜班", "会話強化ナイトクラス")}</td><td>${tt("日语生活会话强化班", "日本語生活会話強化クラス")}</td><td>${tt("山田老师", "山田先生")}</td><td>0/6</td><td><span class="status warn">${tt("待开班", "開講待ち")}</span></td></tr>
               </tbody>
             </table>
           </div>
         </div>
         <div class="card">
           <span class="tag">${tt("精品课程", "上級コース")}</span><span class="tag">${tt("小班课", "少人数クラス")}</span>
-          <div class="card-title" style="margin-top:12px;">${data.student.className}</div>
-          <div class="muted">${data.student.course} / ${tt("教师：", "教師：")}${data.student.teacher} / ${tt("人数上限：8", "定員：8")}</div>
+          <div class="card-title" style="margin-top:12px;">${tl(data.student.className)}</div>
+          <div class="muted">${tl(data.student.course)} / ${tt("教师：", "教師：")}${tl(data.student.teacher)} / ${tt("人数上限：8", "定員：8")}</div>
           ${state.currentRole === "operator" ? `<div class="cta-row" style="margin-top:14px;"><div class="btn">${tt("编辑班级信息", "クラス情報を編集")}</div><div class="btn ghost">${tt("调整教师", "教師を調整")}</div><div class="btn ghost">${tt("学员分班", "受講生を振り分け")}</div></div>` : ""}
           <div class="card-title" style="margin-top:18px;">${tt("课次安排", "授業予定")}</div>
-          <div class="list">${data.schedule.map(item => `<div class="list-item"><div class="list-title">${item.title}</div><div class="muted">${item.date} · ${item.status}</div></div>`).join("")}</div>
+          <div class="list">${data.schedule.map(item => `<div class="list-item"><div class="list-title">${tl(item.title)}</div><div class="muted">${item.date} · ${tl(item.status)}</div></div>`).join("")}</div>
           <div class="cta-row">
             ${state.currentRole === "operator" ? `<div class="btn">${tt("调整排课", "時間割を調整")}</div><div class="btn ghost">${tt("处理请假/调课", "欠席・振替を処理")}</div>` : ""}
             <div class="btn ghost" data-action="admin-to-homework">${tt("查看本班作业", "このクラスの課題を見る")}</div>
           </div>
           <div class="card-title" style="margin-top:18px;">${tt("班级学员", "クラス受講生")}</div>
           <div class="list">
-            ${data.classmates.map(item => `<div class="list-item"><div class="list-meta"><div class="list-title">${item.name}</div><span class="status ${item.status === "待跟进" ? "warn" : ""}">${item.status}</span></div><div class="muted">${item.progress}</div></div>`).join("")}
+            ${data.classmates.map(item => `<div class="list-item"><div class="list-meta"><div class="list-title">${item.name}</div><span class="status ${tl(item.status) === tt("待跟进", "要フォロー") ? "warn" : ""}">${tl(item.status)}</span></div><div class="muted">${tl(item.progress)}</div></div>`).join("")}
           </div>
           ${state.currentRole === "operator" ? `<div class="demo-tip">${tt("这里的编辑动作属于教务/运营：维护班级结构、教师分配、学员分班和排课安排。", "この編集操作は教務・運営担当の役割です。クラス構造、教師配置、受講生振り分け、時間割を管理します。")}</div>` : ""}
         </div>
@@ -724,9 +731,9 @@ const views = {
               <table class="table">
                 <thead><tr><th>${tt("学员", "受講生")}</th><th>${tt("课程/班级", "コース／クラス")}</th><th>${tt("会员状态", "会員状態")}</th><th>${tt("当前状态", "現在の状態")}</th></tr></thead>
                 <tbody>
-                  <tr><td>${data.student.name}</td><td>${data.student.course} / ${data.student.className}</td><td>有效</td><td><span class="status">正常学习</span></td></tr>
+                  <tr><td>${data.student.name}</td><td>${tl(data.student.course)} / ${tl(data.student.className)}</td><td>${tt("有效", "有効")}</td><td><span class="status">${tt("正常学习", "通常学習")}</span></td></tr>
                   <tr><td>高桥真由</td><td>日语 0 起步基础课 / 2026 春季 2 班</td><td>即将到期</td><td><span class="status warn">待跟进</span></td></tr>
-                  <tr><td>李可欣</td><td>日语初级精品班 / ${data.student.className}</td><td>有效</td><td><span class="status">作业已点评</span></td></tr>
+                  <tr><td>李可欣</td><td>${tt("日语初级精品班", "日本語初級プレミアムクラス")} / ${tl(data.student.className)}</td><td>${tt("有效", "有効")}</td><td><span class="status">${tt("作业已点评", "課題フィードバック済み")}</span></td></tr>
                 </tbody>
               </table>
             </div>
@@ -752,8 +759,8 @@ const views = {
       },
       content: `
       <div class="card">
-        <div class="card-title">${data.homework.title}</div>
-        <div class="muted">${tt("提交人：", "提出者：")}${data.student.name} / ${tt("截止时间：", "締切：")}${data.homework.due}</div>
+        <div class="card-title">${tl(data.homework.title)}</div>
+        <div class="muted">${tt("提交人：", "提出者：")}${data.student.name} / ${tt("截止时间：", "締切：")}${tl(data.homework.due)}</div>
       </div>
       <div class="grid cols-2">
         <div class="card">
@@ -763,7 +770,7 @@ const views = {
         <div class="card">
           <div class="card-title">${tt("教师反馈", "教師フィードバック")}</div>
           <div class="tag">${tt("评分", "評価")} ${data.homework.score}</div>
-          <div class="muted">${data.homework.feedback}</div>
+          <div class="muted">${tl(data.homework.feedback)}</div>
         </div>
       </div>
     `,
@@ -802,10 +809,10 @@ const views = {
                     <tr>
                       <td>${item.no}</td>
                       <td>${item.user}</td>
-                      <td>${item.item}</td>
-                      <td>${item.type}</td>
+                      <td>${tl(item.item)}</td>
+                      <td>${tl(item.type)}</td>
                       <td>${item.amount}</td>
-                      <td><span class="status ${item.status === "退款处理中" ? "warn" : ""}">${item.status}</span></td>
+                      <td><span class="status ${tl(item.status) === tt("退款处理中", "返金処理中") ? "warn" : ""}">${tl(item.status)}</span></td>
                     </tr>
                   `).join("")}
                 </tbody>
@@ -859,8 +866,8 @@ const views = {
                 <thead><tr><th>${tt("活动名称", "イベント名")}</th><th>${tt("类型", "種別")}</th><th>${tt("时间", "日時")}</th><th>${tt("费用", "料金")}</th><th>${tt("状态", "状態")}</th></tr></thead>
                 <tbody>
                   <tr>
-                    <td>${data.activity.title}</td>
-                    <td>${data.activity.type}</td>
+                    <td>${tl(data.activity.title)}</td>
+                    <td>${tl(data.activity.type)}</td>
                     <td>${data.activity.time}</td>
                     <td>${data.activity.fee}</td>
                     <td><span class="status">报名中</span></td>
@@ -924,9 +931,9 @@ const views = {
                       <td>${item.no}</td>
                       <td>${item.orderNo}</td>
                       <td>${item.user}</td>
-                      <td>${item.item}</td>
-                      <td>${item.reason}</td>
-                      <td><span class="status warn">${item.status}</span></td>
+                      <td>${tl(item.item)}</td>
+                      <td>${tl(item.reason)}</td>
+                      <td><span class="status warn">${tl(item.status)}</span></td>
                     </tr>
                   `).join("")}
                 </tbody>
@@ -977,10 +984,10 @@ const views = {
                 <tbody>
                   ${data.resources.map((item) => `
                     <tr>
-                      <td>${item.title}</td>
-                      <td>${item.type}</td>
-                      <td>${item.course}</td>
-                      <td><span class="status ${item.status === "草稿" ? "warn" : ""}">${item.status}</span></td>
+                      <td>${tl(item.title)}</td>
+                      <td>${tl(item.type)}</td>
+                      <td>${tl(item.course)}</td>
+                      <td><span class="status ${tl(item.status) === tt("草稿", "下書き") ? "warn" : ""}">${tl(item.status)}</span></td>
                     </tr>
                   `).join("")}
                 </tbody>
@@ -1069,7 +1076,7 @@ const views = {
           <div class="table-wrap">
             <table class="table">
               <thead><tr><th>${tt("学员", "受講生")}</th><th>${tt("触发原因", "発生理由")}</th><th>${tt("负责人", "担当者")}</th><th>${tt("状态", "状態")}</th></tr></thead>
-              <tbody>${followupItems().map(item => `<tr><td>${item.name}</td><td>${item.reason}</td><td>${item.owner}</td><td><span class="status warn">${tt("待处理", "未対応")}</span></td></tr>`).join("")}</tbody>
+              <tbody>${followupItems().map(item => `<tr><td>${item.name}</td><td>${tl(item.reason)}</td><td>${tl(item.owner)}</td><td><span class="status warn">${tt("待处理", "未対応")}</span></td></tr>`).join("")}</tbody>
             </table>
           </div>
         </div>
@@ -1136,13 +1143,13 @@ const views = {
     render: () => phone(`
       <div class="section-title">${tt("你好，", "こんにちは、")}${data.student.name}</div>
       <div class="card">
-        <div class="list-title">${data.student.course}</div>
-        <div class="muted">${data.student.membership}</div>
+        <div class="list-title">${tl(data.student.course)}</div>
+        <div class="muted">${tl(data.student.membership)}</div>
         <div class="badge-row"><span class="tag">${tt("课程服务中", "コース提供中")}</span><span class="tag">${tt("会员权益中", "会員特典有効")}</span></div>
       </div>
       <div class="card">
         <div class="section-title">${tt("最近课表", "最近の時間割")}</div>
-        ${data.schedule.map(item => `<div class="list-item"><div class="list-title">${item.title}</div><div class="muted">${item.date}</div></div>`).join("")}
+        ${data.schedule.map(item => `<div class="list-item"><div class="list-title">${tl(item.title)}</div><div class="muted">${item.date}</div></div>`).join("")}
       </div>
       <div class="card">
         <div class="section-title">${tt("今日任务", "本日のタスク")}</div>
@@ -1152,7 +1159,7 @@ const views = {
       </div>
       <div class="card">
         <div class="section-title">${tt("推荐活动", "おすすめイベント")}</div>
-        <div class="list-title">${data.activity.title}</div>
+        <div class="list-title">${tl(data.activity.title)}</div>
         <div class="muted">${data.activity.time} · ${data.activity.fee}</div>
         <div class="btn ghost" style="margin-top:12px;" data-action="go-activity">${tt("查看活动", "イベントを見る")}</div>
       </div>
@@ -1164,7 +1171,7 @@ const views = {
     subtitle: () => tt("课程转化与价值展示", "コース転換と価値訴求"),
     tip: "这一页接转化闭环，重点讲购买课程后自动获得会员权益。",
     render: () => phone(`
-      <div class="section-title">${data.student.course}</div>
+      <div class="section-title">${tl(data.student.course)}</div>
       <span class="tag">${tt("购买课程自动获得会员权益", "コース購入で会員特典が自動付与")}</span>
       <div class="card">
         <div class="muted">${tt("周期：6 个月 / 形式：小班课 / 服务：课表、作业、每日任务、老师反馈、学习档案", "期間：6か月 / 形式：少人数クラス / 提供内容：時間割、課題、日次タスク、教師フィードバック、学習記録")}</div>
@@ -1180,12 +1187,12 @@ const views = {
     render: () => phone(`
       <div class="card highlight">
         <div class="section-title">${tt("支付成功", "決済完了")}</div>
-        <div class="muted">${tt("你已成功购买 ", "")}${data.student.course}${tt("", " を購入しました")}</div>
+        <div class="muted">${tt("你已成功购买 ", "")}${tl(data.student.course)}${tt("", " を購入しました")}</div>
       </div>
       <div class="card">
         <div class="section-title">${tt("立即生效", "即時反映")}</div>
         <div class="list">
-          <div class="list-item"><div class="list-title">${tt("课程服务已开通", "コースサービス開通済み")}</div><div class="muted">${data.student.className}${tt(" 已加入", " に参加済み")}</div></div>
+          <div class="list-item"><div class="list-title">${tt("课程服务已开通", "コースサービス開通済み")}</div><div class="muted">${tl(data.student.className)}${tt(" 已加入", " に参加済み")}</div></div>
           <div class="list-item"><div class="list-title">${tt("会员权益已激活", "会員特典が有効化")}</div><div class="muted">${tt("课程服务期内可享受会员权益", "コース提供期間中は会員特典を利用可能")}</div></div>
         </div>
       </div>
@@ -1200,7 +1207,7 @@ const views = {
     tip: "这里强调这不是内容页，而是真实排课和班级管理的学员视图。",
     render: () => phone(`
       <div class="section-title">${tt("我的课表", "自分の時間割")}</div>
-      ${data.schedule.map(item => `<div class="list-item"><div class="list-title">${item.title}</div><div class="muted">${item.date} · ${item.status}</div></div>`).join("")}
+      ${data.schedule.map(item => `<div class="list-item"><div class="list-title">${tl(item.title)}</div><div class="muted">${item.date} · ${tl(item.status)}</div></div>`).join("")}
       <div class="btn" style="margin-top:12px;">${tt("提交请假申请", "欠席申請を出す")}</div>
       <div class="btn ghost" style="margin-top:10px;" data-action="go-homework">${tt("查看课后作业", "授業後の課題を見る")}</div>
       ${phoneNav()}
@@ -1211,16 +1218,16 @@ const views = {
     subtitle: () => tt("作业提交与教师反馈", "課題提出と教師フィードバック"),
     tip: "这里讲学员提交后能收到老师反馈，反馈会回流进学习档案。",
     render: () => phone(`
-      <div class="section-title">${data.homework.title}</div>
+      <div class="section-title">${tl(data.homework.title)}</div>
       <div class="card">
-        <div class="muted">${tt("截止时间：", "締切：")}${data.homework.due}</div>
+        <div class="muted">${tt("截止时间：", "締切：")}${tl(data.homework.due)}</div>
       </div>
       <div class="btn" data-action="submit-homework">${state.homeworkSubmitted ? tt("已提交作业", "課題提出済み") : tt("提交语音作业", "音声課題を提出")}</div>
       ${state.homeworkSubmitted ? `<div class="notice">${tt("作业已提交，教师反馈已同步进入学习档案。", "課題提出済み。教師フィードバックは学習記録へ同期済み。")}</div>` : ""}
       <div class="card" style="margin-top:14px;">
         <div class="section-title">${tt("教师反馈", "教師フィードバック")}</div>
         <div class="tag">${tt("评分", "評価")} ${data.homework.score}</div>
-        <div class="muted">${data.homework.feedback}</div>
+        <div class="muted">${tl(data.homework.feedback)}</div>
       </div>
       ${phoneNav()}
     `),
@@ -1244,61 +1251,61 @@ const views = {
     `),
   },
   "mini-activity": {
-    title: "小程序活动详情",
-    subtitle: "活动作为品牌获客与学员留存的延伸入口",
+    title: () => tt("小程序活动详情", "ミニアプリ イベント詳細"),
+    subtitle: () => tt("活动作为品牌获客与学员留存的延伸入口", "ブランド集客と継続利用の入口としてのイベント"),
     tip: "这页用来说明活动既能获客，也能增强会员粘性，但一期不把它做得太重。",
     render: () => phone(`
-      <div class="section-title">${data.activity.title}</div>
+      <div class="section-title">${tl(data.activity.title)}</div>
       <div class="card">
-        <div class="muted">${data.activity.desc}</div>
+        <div class="muted">${tl(data.activity.desc)}</div>
         <div class="badge-row">
-          <span class="tag">${data.activity.type}</span>
+          <span class="tag">${tl(data.activity.type)}</span>
           <span class="tag">${data.activity.fee}</span>
         </div>
       </div>
       <div class="card" style="margin-top:14px;">
-        <div class="muted">时间：${data.activity.time}</div>
-        <div class="muted">地点：${data.activity.location}</div>
-        <div class="muted">当前状态：${data.activity.status}</div>
+        <div class="muted">${tt("时间：", "日時：")}${data.activity.time}</div>
+        <div class="muted">${tt("地点：", "場所：")}${tl(data.activity.location)}</div>
+        <div class="muted">${tt("当前状态：", "現在の状態：")}${tl(data.activity.status)}</div>
       </div>
       <div class="cta-row">
-        <div class="btn">立即报名</div>
-        <div class="btn ghost">取消报名</div>
+        <div class="btn">${tt("立即报名", "今すぐ申し込む")}</div>
+        <div class="btn ghost">${tt("取消报名", "申込を取消")}</div>
       </div>
       ${phoneNav()}
     `),
   },
   "mini-profile": {
-    title: "小程序学习档案",
-    subtitle: "学习数据、反馈和服务沉淀",
+    title: () => tt("小程序学习档案", "ミニアプリ 学習記録"),
+    subtitle: () => tt("学习数据、反馈和服务沉淀", "学習データ、フィードバック、サービス履歴の蓄積"),
     tip: "最后用这页收尾，强调到课、作业、每日任务和教师反馈最终都会沉淀成长期服务资产。",
     render: () => phone(`
-      <div class="section-title">学习档案</div>
+      <div class="section-title">${tt("学习档案", "学習記録")}</div>
       <div class="card">
-        <div class="muted">会员状态：${data.student.membership}</div>
-        <div class="muted">到课率：${data.metrics.attendanceRate}</div>
-        <div class="muted">作业完成率：${data.metrics.homeworkRate}</div>
-        <div class="muted">每日任务完成率：${data.metrics.dailyTaskRate}</div>
+        <div class="muted">${tt("会员状态：", "会員状態：")}${tl(data.student.membership)}</div>
+        <div class="muted">${tt("到课率：", "出席率：")}${data.metrics.attendanceRate}</div>
+        <div class="muted">${tt("作业完成率：", "課題完了率：")}${data.metrics.homeworkRate}</div>
+        <div class="muted">${tt("每日任务完成率：", "日次タスク完了率：")}${data.metrics.dailyTaskRate}</div>
       </div>
       <div class="card" style="margin-top:14px;">
-        <div class="section-title">最新反馈</div>
-        <div class="muted">${data.homework.feedback}</div>
+        <div class="section-title">${tt("最新反馈", "最新フィードバック")}</div>
+        <div class="muted">${tl(data.homework.feedback)}</div>
       </div>
-      <div class="demo-tip">演示提示：这里强调到课、作业、每日任务、反馈会统一沉淀为学习档案。</div>
+      <div class="demo-tip">${tt("这里强调到课、作业、每日任务、反馈会统一沉淀为学习档案。", "この画面では、出席・課題・日次タスク・フィードバックが一つの学習記録へ蓄積されることを示します。")}</div>
       ${phoneNav()}
     `),
   },
   "mini-messages": {
-    title: "小程序消息提醒",
-    subtitle: "上课、任务、反馈等提醒统一收口",
+    title: () => tt("小程序消息提醒", "ミニアプリ 通知"),
+    subtitle: () => tt("上课、任务、反馈等提醒统一收口", "授業・タスク・フィードバック通知を一元表示"),
     tip: "这页用来说明提醒服务有真实承接，不是口头描述。",
     render: () => phone(`
-      <div class="section-title">消息提醒</div>
+      <div class="section-title">${tt("消息提醒", "通知")}</div>
       <div class="list">
         ${data.notifications.map((item) => `
           <div class="list-item">
-            <div class="list-title">${item.title}</div>
-            <div class="muted">${item.type}</div>
+          <div class="list-title">${tl(item.title)}</div>
+          <div class="muted">${tl(item.type)}</div>
           </div>
         `).join("")}
       </div>
@@ -1317,35 +1324,35 @@ function renderStudentDetailByRole() {
       <div class="grid cols-2">
         <div class="card">
           <div class="card-title">${data.student.name}</div>
-          <div class="muted">${data.student.membership}</div>
-          <div class="muted">当前课程：${data.student.course}</div>
-          <div class="muted">所属班级：${data.student.className}</div>
+          <div class="muted">${tl(data.student.membership)}</div>
+          <div class="muted">${tt("当前课程：", "現在のコース：")}${tl(data.student.course)}</div>
+          <div class="muted">${tt("所属班级：", "所属クラス：")}${tl(data.student.className)}</div>
           <div class="badge-row">
-            <span class="tag">课程服务中</span>
-            <span class="tag">会员权益有效</span>
+            <span class="tag">${tt("课程服务中", "コース提供中")}</span>
+            <span class="tag">${tt("会员权益有效", "会員特典有効")}</span>
           </div>
         </div>
         <div class="card">
-          <div class="card-title">管理视角摘要</div>
-          <div class="muted">最近订单：${data.orders.length} 笔</div>
-          <div class="muted">退款记录：${data.refunds.length} 笔</div>
-          <div class="muted">续费状态：${data.student.renewal}</div>
-          <div class="muted">当前目标：${data.student.goal}</div>
+          <div class="card-title">${tt("管理视角摘要", "管理視点サマリー")}</div>
+          <div class="muted">${tt("最近订单：", "最近の注文：")}${data.orders.length}${tt(" 笔", " 件")}</div>
+          <div class="muted">${tt("退款记录：", "返金記録：")}${data.refunds.length}${tt(" 笔", " 件")}</div>
+          <div class="muted">${tt("续费状态：", "更新状態：")}${tl(data.student.renewal)}</div>
+          <div class="muted">${tt("当前目标：", "現在の目標：")}${tl(data.student.goal)}</div>
         </div>
       </div>
       <div class="split" style="margin-top:18px;">
         <div class="card">
-          <div class="card-title">订单概览</div>
+          <div class="card-title">${tt("订单概览", "注文概要")}</div>
           <div class="table-wrap">
             <table class="table">
-              <thead><tr><th>商品</th><th>金额</th><th>状态</th></tr></thead>
-              <tbody>${data.orders.map(item => `<tr><td>${item.item}</td><td>${item.amount}</td><td>${item.status}</td></tr>`).join("")}</tbody>
+              <thead><tr><th>${tt("商品", "商品")}</th><th>${tt("金额", "金額")}</th><th>${tt("状态", "状態")}</th></tr></thead>
+              <tbody>${data.orders.map(item => `<tr><td>${tl(item.item)}</td><td>${item.amount}</td><td>${tl(item.status)}</td></tr>`).join("")}</tbody>
             </table>
           </div>
         </div>
         <div class="card">
-          <div class="card-title">管理说明</div>
-          <div class="muted">管理员查看的是学员与课程、会员、订单之间的整体关系，不深入到作业完成率和每日任务执行层明细。</div>
+          <div class="card-title">${tt("管理说明", "管理向け説明")}</div>
+          <div class="muted">${tt("管理员查看的是学员与课程、会员、订单之间的整体关系，不深入到作业完成率和每日任务执行层明细。", "管理者は受講生・コース・会員・注文の全体関係を確認し、課題完了率や日次タスクの実行詳細までは入りません。")}</div>
         </div>
       </div>
     `;
@@ -1356,26 +1363,26 @@ function renderStudentDetailByRole() {
       <div class="grid cols-2">
         <div class="card">
           <div class="card-title">${data.student.name}</div>
-          <div class="muted">当前课程：${data.student.course}</div>
-          <div class="muted">所属班级：${data.student.className}</div>
-          <div class="muted">学习目标：${data.student.goal}</div>
+          <div class="muted">${tt("当前课程：", "現在のコース：")}${tl(data.student.course)}</div>
+          <div class="muted">${tt("所属班级：", "所属クラス：")}${tl(data.student.className)}</div>
+          <div class="muted">${tt("学习目标：", "学習目標：")}${tl(data.student.goal)}</div>
         </div>
         <div class="card">
-          <div class="card-title">学习进度</div>
-          <div class="muted">到课率：${data.metrics.attendanceRate}</div>
-          <div class="muted">作业完成率：${data.metrics.homeworkRate}</div>
-          <div class="muted">每日任务完成率：${data.metrics.dailyTaskRate}</div>
+          <div class="card-title">${tt("学习进度", "学習進捗")}</div>
+          <div class="muted">${tt("到课率：", "出席率：")}${data.metrics.attendanceRate}</div>
+          <div class="muted">${tt("作业完成率：", "課題完了率：")}${data.metrics.homeworkRate}</div>
+          <div class="muted">${tt("每日任务完成率：", "日次タスク完了率：")}${data.metrics.dailyTaskRate}</div>
         </div>
       </div>
       <div class="split" style="margin-top:18px;">
         <div class="card">
-          <div class="card-title">教师反馈</div>
-          <div class="tag">评分 ${data.homework.score}</div>
-          <div class="muted">${data.homework.feedback}</div>
+          <div class="card-title">${tt("教师反馈", "教師フィードバック")}</div>
+          <div class="tag">${tt("评分", "評価")} ${data.homework.score}</div>
+          <div class="muted">${tl(data.homework.feedback)}</div>
         </div>
         <div class="card">
-          <div class="card-title">教师可操作内容</div>
-          <div class="muted">可查看学习异常、点评作业、填写阶段反馈；不查看订单退款与运营跟进内容。</div>
+          <div class="card-title">${tt("教师可操作内容", "教師が操作できる内容")}</div>
+          <div class="muted">${tt("可查看学习异常、点评作业、填写阶段反馈；不查看订单退款与运营跟进内容。", "学習異常確認、課題添削、段階フィードバック記入は可能ですが、注文・返金・運営フォローは表示しません。")}</div>
         </div>
       </div>
     `;
@@ -1385,39 +1392,39 @@ function renderStudentDetailByRole() {
     <div class="grid cols-2">
       <div class="card">
         <div class="card-title">${data.student.name}</div>
-        <div class="muted">${data.student.membership}</div>
-        <div class="muted">当前课程：${data.student.course}</div>
-        <div class="muted">所属班级：${data.student.className}</div>
+        <div class="muted">${tl(data.student.membership)}</div>
+        <div class="muted">${tt("当前课程：", "現在のコース：")}${tl(data.student.course)}</div>
+        <div class="muted">${tt("所属班级：", "所属クラス：")}${tl(data.student.className)}</div>
         <div class="badge-row">
-          <span class="tag">课程服务中</span>
-          <span class="tag">会员权益有效</span>
+          <span class="tag">${tt("课程服务中", "コース提供中")}</span>
+          <span class="tag">${tt("会员权益有效", "会員特典有効")}</span>
         </div>
       </div>
       <div class="card">
-        <div class="card-title">学习状态</div>
-        <div class="muted">到课率：${data.metrics.attendanceRate}</div>
-        <div class="muted">作业完成率：${data.metrics.homeworkRate}</div>
-        <div class="muted">每日任务完成率：${data.metrics.dailyTaskRate}</div>
-        <div class="muted">学习目标：${data.student.goal}</div>
+        <div class="card-title">${tt("学习状态", "学習状態")}</div>
+        <div class="muted">${tt("到课率：", "出席率：")}${data.metrics.attendanceRate}</div>
+        <div class="muted">${tt("作业完成率：", "課題完了率：")}${data.metrics.homeworkRate}</div>
+        <div class="muted">${tt("每日任务完成率：", "日次タスク完了率：")}${data.metrics.dailyTaskRate}</div>
+        <div class="muted">${tt("学习目标：", "学習目標：")}${tl(data.student.goal)}</div>
       </div>
     </div>
     <div class="split" style="margin-top:18px;">
       <div class="card">
-        <div class="card-title">服务与续费</div>
-        <div class="muted">${data.student.renewal}</div>
-        <div class="muted" style="margin-top:10px;">系统将在课程后半程自动进入续费提醒和运营跟进。</div>
+        <div class="card-title">${tt("服务与续费", "サービスと更新")}</div>
+        <div class="muted">${tl(data.student.renewal)}</div>
+        <div class="muted" style="margin-top:10px;">${tt("系统将在课程后半程自动进入续费提醒和运营跟进。", "システムはコース後半で自動的に更新通知と運営フォローへ移行します。")}</div>
         <div class="cta-row">
-          <div class="btn">记录服务备注</div>
-          <div class="btn ghost">编辑学员信息</div>
-          <div class="btn ghost">调整会员权益</div>
-          <div class="btn ghost">更新续费备注</div>
-          <div class="btn ghost" data-action="admin-to-followups">查看跟进</div>
+          <div class="btn">${tt("记录服务备注", "サービスメモ記録")}</div>
+          <div class="btn ghost">${tt("编辑学员信息", "受講生情報を編集")}</div>
+          <div class="btn ghost">${tt("调整会员权益", "会員特典を調整")}</div>
+          <div class="btn ghost">${tt("更新续费备注", "更新メモを更新")}</div>
+          <div class="btn ghost" data-action="admin-to-followups">${tt("查看跟进", "フォローを見る")}</div>
         </div>
       </div>
       <div class="card">
-        <div class="card-title">运营视角说明</div>
-        <div class="muted">教务/运营同时关注学员学习状态、服务状态和续费跟进，是学员服务的主操作者。</div>
-        <div class="demo-tip">这页要体现 operator 的编辑能力：改学员档案、补充会员权益、记录续费与服务备注。</div>
+        <div class="card-title">${tt("运营视角说明", "運営視点の説明")}</div>
+        <div class="muted">${tt("教务/运营同时关注学员学习状态、服务状态和续费跟进，是学员服务的主操作者。", "教務・運営は学習状態、サービス状態、更新フォローを同時に見ており、受講生対応の主担当です。")}</div>
+        <div class="demo-tip">${tt("这页要体现 operator 的编辑能力：改学员档案、补充会员权益、记录续费与服务备注。", "この画面では operator の編集権限、つまり受講生情報修正、特典追加、更新・サービスメモ記録を示します。")}</div>
       </div>
     </div>
   `;
@@ -1476,74 +1483,74 @@ function miniInnerContent(current) {
   if (current === "mini-home") {
     return `
       <div class="card">
-        <div class="section-title">你好，${data.student.name}</div>
-        <div class="muted">${data.student.course}</div>
-        <div class="badge-row"><span class="tag">课程服务中</span><span class="tag">会员权益中</span></div>
+        <div class="section-title">${tt("你好，", "こんにちは、")}${data.student.name}</div>
+        <div class="muted">${tl(data.student.course)}</div>
+        <div class="badge-row"><span class="tag">${tt("课程服务中", "コース提供中")}</span><span class="tag">${tt("会员权益中", "会員特典有効")}</span></div>
       </div>
       <div class="card">
-        <div class="section-title">最近课表</div>
-        ${data.schedule.map(item => `<div class="list-item"><div class="list-title">${item.title}</div><div class="muted">${item.date}</div></div>`).join("")}
-        <div class="cta-row"><div class="btn" data-action="mini-to-schedule">查看课表</div><div class="btn ghost" data-action="go-activity">活动入口</div></div>
+        <div class="section-title">${tt("最近课表", "最近の時間割")}</div>
+        ${data.schedule.map(item => `<div class="list-item"><div class="list-title">${tl(item.title)}</div><div class="muted">${item.date}</div></div>`).join("")}
+        <div class="cta-row"><div class="btn" data-action="mini-to-schedule">${tt("查看课表", "時間割を見る")}</div><div class="btn ghost" data-action="go-activity">${tt("活动入口", "イベント入口")}</div></div>
       </div>
       <div class="card">
-        <div class="section-title">今日任务</div>
-        <div class="muted">5 个词汇 + ${data.dailyTask.grammarCount} 个语法题</div>
-        <div class="btn" style="margin-top:12px;" data-action="go-task">去完成</div>
-        ${state.dailyTaskCompleted ? `<div class="notice">今日任务已完成，连续打卡 ${data.dailyTask.streak + 1} 天。</div>` : ""}
+        <div class="section-title">${tt("今日任务", "本日のタスク")}</div>
+        <div class="muted">${tt("5 个词汇 + ", "単語5個 + ")}${data.dailyTask.grammarCount}${tt(" 个语法题", " 文法問題")}</div>
+        <div class="btn" style="margin-top:12px;" data-action="go-task">${tt("去完成", "タスクへ")}</div>
+        ${state.dailyTaskCompleted ? `<div class="notice">${tt("今日任务已完成，连续打卡 ", "本日のタスク完了。連続達成 ")}${data.dailyTask.streak + 1}${tt(" 天。", " 日。")}</div>` : ""}
       </div>
     `;
   }
   if (current === "mini-course") {
     return `
       <div class="card">
-        <div class="section-title">${data.student.course}</div>
-        <span class="tag">购买课程自动获得会员权益</span>
-        <div class="muted" style="margin-top:8px;">周期：6 个月 / 形式：小班课 / 服务：课表、作业、每日任务、老师反馈、学习档案</div>
+        <div class="section-title">${tl(data.student.course)}</div>
+        <span class="tag">${tt("购买课程自动获得会员权益", "コース購入で会員特典が自動付与")}</span>
+        <div class="muted" style="margin-top:8px;">${tt("周期：6 个月 / 形式：小班课 / 服务：课表、作业、每日任务、老师反馈、学习档案", "期間：6か月 / 形式：少人数クラス / 提供内容：時間割、課題、日次タスク、教師フィードバック、学習記録")}</div>
         <div class="cta-row">
-          <div class="btn secondary" data-action="purchase-course">立即购买</div>
-          <div class="btn ghost" data-action="mini-to-payment">查看支付结果</div>
+          <div class="btn secondary" data-action="purchase-course">${tt("立即购买", "今すぐ購入")}</div>
+          <div class="btn ghost" data-action="mini-to-payment">${tt("查看支付结果", "決済結果を見る")}</div>
         </div>
       </div>
       ${state.purchased ? `
       <div class="card highlight">
-        <div class="section-title">购课后自动生效</div>
-        <div class="muted">课程服务期内会员权益已激活，可直接进入课表和学习流程。</div>
+        <div class="section-title">${tt("购课后自动生效", "購入後すぐに有効化")}</div>
+        <div class="muted">${tt("课程服务期内会员权益已激活，可直接进入课表和学习流程。", "コース提供期間中の会員特典が有効化され、すぐに時間割と学習フローへ進めます。")}</div>
       </div>` : ""}
     `;
   }
   if (current === "mini-task") {
     return `
       <div class="card">
-        <div class="section-title">今日词汇任务</div>
-        ${data.dailyTask.vocab.map(word => `<div class="list-item"><div class="list-title">${word}</div><div class="muted">今日学习词汇</div></div>`).join("")}
+        <div class="section-title">${tt("今日词汇任务", "本日の単語タスク")}</div>
+        ${data.dailyTask.vocab.map(word => `<div class="list-item"><div class="list-title">${word}</div><div class="muted">${tt("今日学习词汇", "本日の学習単語")}</div></div>`).join("")}
       </div>
       <div class="card">
-        <div class="muted">语法题任务：${data.dailyTask.grammarCount} 题</div>
-        <div class="muted">连续完成：${state.dailyTaskCompleted ? data.dailyTask.streak + 1 : data.dailyTask.streak} 天</div>
+        <div class="muted">${tt("语法题任务：", "文法問題：")}${data.dailyTask.grammarCount}${tt(" 题", " 問")}</div>
+        <div class="muted">${tt("连续完成：", "連続達成：")}${state.dailyTaskCompleted ? data.dailyTask.streak + 1 : data.dailyTask.streak}${tt(" 天", " 日")}</div>
         <div class="cta-row">
-          <div class="btn" data-action="complete-task">${state.dailyTaskCompleted ? "今日任务已完成" : "完成今日任务"}</div>
-          <div class="btn ghost" data-action="mini-to-homework">查看作业</div>
+          <div class="btn" data-action="complete-task">${state.dailyTaskCompleted ? tt("今日任务已完成", "本日のタスク完了") : tt("完成今日任务", "本日のタスクを完了")}</div>
+          <div class="btn ghost" data-action="mini-to-homework">${tt("查看作业", "課題を見る")}</div>
         </div>
-        ${state.dailyTaskCompleted ? `<div class="notice">打卡成功，后台跟进任务已自动更新。</div>` : ""}
+        ${state.dailyTaskCompleted ? `<div class="notice">${tt("打卡成功，后台跟进任务已自动更新。", "打刻成功。バックオフィス側のフォロータスクも自動更新されました。")}</div>` : ""}
       </div>
     `;
   }
   if (current === "mini-profile") {
     return `
       <div class="card">
-        <div class="section-title">学习档案</div>
-        <div class="muted">会员状态：${data.student.membership}</div>
-        <div class="muted">到课率：${data.metrics.attendanceRate}</div>
-        <div class="muted">作业完成率：${data.metrics.homeworkRate}</div>
-        <div class="muted">每日任务完成率：${data.metrics.dailyTaskRate}</div>
+        <div class="section-title">${tt("学习档案", "学習記録")}</div>
+        <div class="muted">${tt("会员状态：", "会員状態：")}${tl(data.student.membership)}</div>
+        <div class="muted">${tt("到课率：", "出席率：")}${data.metrics.attendanceRate}</div>
+        <div class="muted">${tt("作业完成率：", "課題完了率：")}${data.metrics.homeworkRate}</div>
+        <div class="muted">${tt("每日任务完成率：", "日次タスク完了率：")}${data.metrics.dailyTaskRate}</div>
       </div>
       <div class="card">
-        <div class="section-title">最新反馈</div>
-        <div class="tag">评分 ${data.homework.score}</div>
-        <div class="muted">${data.homework.feedback}</div>
+        <div class="section-title">${tt("最新反馈", "最新フィードバック")}</div>
+        <div class="tag">${tt("评分", "評価")} ${data.homework.score}</div>
+        <div class="muted">${tl(data.homework.feedback)}</div>
         <div class="cta-row">
-          <div class="btn ghost" data-action="mini-to-homework">查看作业</div>
-          <div class="btn ghost" data-action="go-activity">查看活动</div>
+          <div class="btn ghost" data-action="mini-to-homework">${tt("查看作业", "課題を見る")}</div>
+          <div class="btn ghost" data-action="go-activity">${tt("查看活动", "イベントを見る")}</div>
         </div>
       </div>
     `;
@@ -1551,77 +1558,77 @@ function miniInnerContent(current) {
   if (current === "mini-messages") {
     return `
       <div class="card">
-        <div class="section-title">消息提醒</div>
+        <div class="section-title">${tt("消息提醒", "通知")}</div>
         <div class="list">
           ${data.notifications.map((item) => `
             <div class="list-item">
-              <div class="list-title">${item.title}</div>
-              <div class="muted">${item.type}</div>
+              <div class="list-title">${tl(item.title)}</div>
+              <div class="muted">${tl(item.type)}</div>
             </div>
           `).join("")}
         </div>
       </div>
       <div class="card">
-        <div class="section-title">提醒价值</div>
-        <div class="muted">上课、每日任务、作业反馈和会员状态都能通过统一消息入口承接。</div>
+        <div class="section-title">${tt("提醒价值", "通知の価値")}</div>
+        <div class="muted">${tt("上课、每日任务、作业反馈和会员状态都能通过统一消息入口承接。", "授業、日次タスク、課題フィードバック、会員状態の通知を一つの入口で受け取れます。")}</div>
       </div>
     `;
   }
   if (current === "mini-schedule") {
     return `
       <div class="card">
-        <div class="section-title">我的课表</div>
-        ${data.schedule.map(item => `<div class="list-item"><div class="list-title">${item.title}</div><div class="muted">${item.date} · ${item.status}</div></div>`).join("")}
-        <div class="cta-row"><div class="btn">提交请假申请</div><div class="btn ghost" data-action="mini-to-homework">查看课后作业</div></div>
+        <div class="section-title">${tt("我的课表", "自分の時間割")}</div>
+        ${data.schedule.map(item => `<div class="list-item"><div class="list-title">${tl(item.title)}</div><div class="muted">${item.date} · ${tl(item.status)}</div></div>`).join("")}
+        <div class="cta-row"><div class="btn">${tt("提交请假申请", "欠席申請を出す")}</div><div class="btn ghost" data-action="mini-to-homework">${tt("查看课后作业", "授業後の課題を見る")}</div></div>
       </div>
     `;
   }
   if (current === "mini-homework") {
     return `
       <div class="card">
-        <div class="section-title">${data.homework.title}</div>
-        <div class="muted">截止时间：${data.homework.due}</div>
-        <div class="cta-row"><div class="btn" data-action="submit-homework">${state.homeworkSubmitted ? "已提交作业" : "提交语音作业"}</div><div class="btn ghost" data-action="mini-to-profile">同步到学习档案</div></div>
-        ${state.homeworkSubmitted ? `<div class="notice">作业已提交，教师反馈已同步进入学习档案。</div>` : ""}
+        <div class="section-title">${tl(data.homework.title)}</div>
+        <div class="muted">${tt("截止时间：", "締切：")}${tl(data.homework.due)}</div>
+        <div class="cta-row"><div class="btn" data-action="submit-homework">${state.homeworkSubmitted ? tt("已提交作业", "課題提出済み") : tt("提交语音作业", "音声課題を提出")}</div><div class="btn ghost" data-action="mini-to-profile">${tt("同步到学习档案", "学習記録へ同期")}</div></div>
+        ${state.homeworkSubmitted ? `<div class="notice">${tt("作业已提交，教师反馈已同步进入学习档案。", "課題提出済み。教師フィードバックは学習記録へ同期済みです。")}</div>` : ""}
       </div>
       <div class="card">
-        <div class="section-title">教师反馈</div>
-        <div class="tag">评分 ${data.homework.score}</div>
-        <div class="muted">${data.homework.feedback}</div>
+        <div class="section-title">${tt("教师反馈", "教師フィードバック")}</div>
+        <div class="tag">${tt("评分", "評価")} ${data.homework.score}</div>
+        <div class="muted">${tl(data.homework.feedback)}</div>
       </div>
     `;
   }
   if (current === "mini-payment") {
     return `
       <div class="card highlight">
-        <div class="section-title">支付成功</div>
-        <div class="muted">你已成功购买 ${data.student.course}</div>
+        <div class="section-title">${tt("支付成功", "決済完了")}</div>
+        <div class="muted">${tt("你已成功购买 ", "")}${tl(data.student.course)}${tt("", " を購入しました")}</div>
       </div>
       <div class="card">
         <div class="list">
-          <div class="list-item"><div class="list-title">课程服务已开通</div><div class="muted">${data.student.className} 已加入</div></div>
-          <div class="list-item"><div class="list-title">会员权益已激活</div><div class="muted">课程服务期内可享受会员权益</div></div>
+          <div class="list-item"><div class="list-title">${tt("课程服务已开通", "コースサービス開通済み")}</div><div class="muted">${tl(data.student.className)}${tt(" 已加入", " に参加済み")}</div></div>
+          <div class="list-item"><div class="list-title">${tt("会员权益已激活", "会員特典が有効化")}</div><div class="muted">${tt("课程服务期内可享受会员权益", "コース提供期間中は会員特典を利用可能")}</div></div>
         </div>
-        <div class="cta-row"><div class="btn" data-action="mini-to-schedule">查看我的课表</div></div>
+        <div class="cta-row"><div class="btn" data-action="mini-to-schedule">${tt("查看我的课表", "自分の時間割を見る")}</div></div>
       </div>
     `;
   }
   if (current === "mini-activity") {
     return `
       <div class="card">
-        <div class="section-title">${data.activity.title}</div>
-        <div class="muted">${data.activity.desc}</div>
-        <div class="badge-row"><span class="tag">${data.activity.type}</span><span class="tag">${data.activity.fee}</span></div>
+        <div class="section-title">${tl(data.activity.title)}</div>
+        <div class="muted">${tl(data.activity.desc)}</div>
+        <div class="badge-row"><span class="tag">${tl(data.activity.type)}</span><span class="tag">${data.activity.fee}</span></div>
       </div>
       <div class="card">
-        <div class="muted">时间：${data.activity.time}</div>
-        <div class="muted">地点：${data.activity.location}</div>
-        <div class="muted">状态：${data.activity.status}</div>
-        <div class="cta-row"><div class="btn">立即报名</div><div class="btn ghost">取消报名</div></div>
+        <div class="muted">${tt("时间：", "日時：")}${data.activity.time}</div>
+        <div class="muted">${tt("地点：", "場所：")}${tl(data.activity.location)}</div>
+        <div class="muted">${tt("状态：", "状態：")}${tl(data.activity.status)}</div>
+        <div class="cta-row"><div class="btn">${tt("立即报名", "今すぐ申し込む")}</div><div class="btn ghost">${tt("取消报名", "申込を取消")}</div></div>
       </div>
     `;
   }
-  return `<div class="card"><div class="muted">页面准备中</div></div>`;
+  return `<div class="card"><div class="muted">${tt("页面准备中", "画面準備中")}</div></div>`;
 }
 
 function adminPage({ breadcrumb, title, actions = [], content }) {
@@ -1671,7 +1678,7 @@ function followupItems() {
   if (state.dailyTaskCompleted) {
     return data.followups.filter((item) => item.name !== data.student.name);
   }
-  return [{ name: data.student.name, reason: "今日每日任务待完成", owner: "运营-A" }, ...data.followups];
+  return [{ name: data.student.name, reason: tt("今日每日任务待完成", "本日の日次タスク未完了"), owner: tt("运营-A", "運営-A") }, ...data.followups];
 }
 
 const root = document.getElementById("view-root");
