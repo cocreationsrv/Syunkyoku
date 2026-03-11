@@ -28,16 +28,30 @@ body {
 }
 
 .shell {
-  display: grid;
-  grid-template-columns: 280px 1fr;
   min-height: 100vh;
+  position: relative;
 }
 
 .sidebar {
   padding: 24px 18px;
-  border-right: 1px solid #0b1f33;
   background: var(--sidebar-bg);
   color: var(--sidebar-text);
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  z-index: 40;
+  transition: transform 180ms ease, opacity 180ms ease;
+  border-right: 1px solid #0b1f33;
+}
+
+.sidebar-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .brand {
@@ -45,6 +59,10 @@ body {
   gap: 14px;
   align-items: center;
   margin-bottom: 22px;
+}
+
+.brand-copy {
+  min-width: 0;
 }
 
 .brand-mark {
@@ -66,6 +84,17 @@ body {
 .brand-subtitle {
   font-size: 12px;
   color: var(--sidebar-muted);
+}
+
+.sidebar-toggle {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  cursor: pointer;
+  flex: none;
 }
 
 .nav {
@@ -145,19 +174,8 @@ body {
 
 .content {
   padding: 28px;
-}
-
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: flex-start;
-  margin-bottom: 22px;
-}
-
-h1 {
-  margin: 0 0 6px;
-  font-size: 28px;
+  margin-left: 280px;
+  transition: margin-left 180ms ease;
 }
 
 p {
@@ -165,12 +183,46 @@ p {
   color: var(--muted);
 }
 
-.story-pill {
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: var(--primary-soft);
-  color: var(--primary);
-  font-size: 13px;
+.sidebar-note {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-page-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.sidebar-page-subtitle {
+  font-size: 12px;
+  color: var(--sidebar-muted);
+  line-height: 1.5;
+}
+
+.sidebar-demo-tip {
+  margin-top: 12px;
+  background: rgba(250, 140, 22, 0.14);
+  border-color: rgba(250, 140, 22, 0.35);
+  color: #ffd591;
+}
+
+.floating-sidebar-toggle {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 30;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  color: #262626;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  display: none;
 }
 
 .demo-tip {
@@ -254,6 +306,42 @@ p {
 .metric-label {
   font-size: 13px;
   color: var(--muted);
+}
+
+.shell.sidebar-collapsed .sidebar {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shell.sidebar-collapsed .floating-sidebar-toggle {
+  display: inline-grid;
+  place-items: center;
+}
+
+.shell.sidebar-collapsed .content {
+  margin-left: 0;
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    width: 280px;
+  }
+
+  .shell.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+    opacity: 1;
+  }
+
+  .content {
+    padding: 18px;
+    margin-left: 0;
+  }
+
+  .floating-sidebar-toggle {
+    display: inline-grid;
+    place-items: center;
+  }
 }
 
 .tag {
@@ -624,12 +712,16 @@ p {
 
 .mini-shell {
   width: 420px;
+  height: 860px;
   margin: 0 auto;
   background: #faf7f1;
   border: 10px solid #1f2937;
   border-radius: 36px;
   padding: 18px;
   box-shadow: 0 26px 50px rgba(31, 41, 55, 0.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .mini-shell-head {
@@ -652,30 +744,44 @@ p {
 }
 
 .mini-content {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .mini-bottom-nav {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
   margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  border-top: 1px solid rgba(31, 41, 55, 0.08);
+  flex: none;
 }
 
 .mini-bottom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 4px;
+  border-radius: 12px;
   text-align: center;
   font-size: 12px;
   color: var(--muted);
   cursor: pointer;
+  white-space: nowrap;
+  transition: all 160ms ease;
 }
 
 .mini-bottom-btn.active {
   color: var(--primary);
   font-weight: 700;
+  background: var(--primary-soft);
 }
 
 @media (max-width: 1080px) {
@@ -704,5 +810,6 @@ p {
   .mini-shell {
     width: 100%;
     max-width: 440px;
+    height: 860px;
   }
 }

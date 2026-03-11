@@ -7,38 +7,42 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="shell">
+    <div class="shell" id="app-shell">
       <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">KL</div>
-          <div>
-            <div class="brand-title">KotobaLink</div>
-            <div class="brand-subtitle">Demo Prototype</div>
+        <div class="sidebar-head">
+          <div class="brand">
+            <div class="brand-mark">KL</div>
+            <div class="brand-copy">
+              <div class="brand-title">KotobaLink</div>
+              <div class="brand-subtitle">Demo Prototype</div>
+            </div>
           </div>
+          <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="切换侧边栏">⟨</button>
         </div>
         <div class="role-switcher">
           <div class="role-title">后台角色切换</div>
           <div class="role-options">
-            <button class="role-btn active" data-role="admin">管理员</button>
-            <button class="role-btn" data-role="operator">教务/运营</button>
-            <button class="role-btn" data-role="teacher">教师</button>
+            <button class="role-btn active" data-role="admin" data-short="管">管理员</button>
+            <button class="role-btn" data-role="operator" data-short="运">教务/运营</button>
+            <button class="role-btn" data-role="teacher" data-short="师">教师</button>
           </div>
         </div>
         <nav class="nav">
-          <button class="nav-btn active" data-view="overview" data-roles="all">演示总览</button>
-          <button class="nav-btn" data-view="admin-app" data-roles="admin,operator,teacher">后台系统体验</button>
-          <button class="nav-btn" data-view="mini-app">小程序体验</button>
+          <button class="nav-btn" data-view="launch-guide" data-roles="all" data-short="上">上线准备</button>
+          <button class="nav-btn" data-view="scenario" data-roles="all" data-short="シ">演示シナリオ</button>
+          <button class="nav-btn active" data-view="overview" data-roles="all" data-short="总">演示总览</button>
+          <button class="nav-btn" data-view="admin-app" data-roles="admin,operator,teacher" data-short="后">后台系统体验</button>
+          <button class="nav-btn" data-view="mini-app" data-short="小">小程序体验</button>
         </nav>
+        <div class="sidebar-note">
+          <div class="role-title">当前演示</div>
+          <div id="page-title" class="sidebar-page-title">演示总览</div>
+          <p id="page-subtitle" class="sidebar-page-subtitle">后天可展示的课程服务闭环 Demo</p>
+          <div id="page-demo-tip" class="demo-tip sidebar-demo-tip" style="display:none;"></div>
+        </div>
       </aside>
       <main class="content">
-        <header class="topbar">
-          <div>
-            <h1 id="page-title">演示总览</h1>
-            <p id="page-subtitle">后天可展示的课程服务闭环 Demo</p>
-            <div id="page-demo-tip" class="demo-tip" style="display:none;"></div>
-          </div>
-          <div class="story-pill">统一样例学员：小林美咲 / 日语初级精品班</div>
-        </header>
+        <button class="floating-sidebar-toggle" id="topbar-sidebar-toggle" type="button" aria-label="切换侧边栏">☰</button>
         <section id="view-root"></section>
       </main>
     </div>

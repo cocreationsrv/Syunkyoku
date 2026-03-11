@@ -23,8 +23,8 @@ const adminWorkspaceTabs = [
   { key: "admin-refunds", label: "退款处理", roles: ["admin", "operator"], section: "运营管理" },
   { key: "admin-activities", label: "活动管理", roles: ["admin", "operator"], section: "运营管理" },
   { key: "admin-courses", label: "课程", roles: ["admin", "operator"], section: "教学运营" },
-  { key: "admin-class", label: "班级详情", roles: ["admin", "operator", "teacher"], section: "教学运营" },
-  { key: "admin-student", label: "学员详情", roles: ["admin", "operator", "teacher"], section: "教学运营" },
+  { key: "admin-class", label: "班级管理", roles: ["admin", "operator", "teacher"], section: "教学运营" },
+  { key: "admin-student", label: "学员管理", roles: ["admin", "operator", "teacher"], section: "教学运营" },
   { key: "admin-resources", label: "资源", roles: ["admin", "operator"], section: "教学运营" },
   { key: "admin-homework", label: "作业批改", roles: ["operator", "teacher"], section: "教学运营" },
   { key: "admin-followups", label: "跟进任务", roles: ["operator"], section: "教学运营" },
@@ -41,6 +41,199 @@ const miniWorkspaceTabs = [
 ];
 
 const views = {
+  "launch-guide": {
+    title: "小程序上线准备",
+    subtitle: "从个人开发到企业上线需要完成的事项",
+    tip: "这页适合在客户确认方案后说明：从当前 Demo 走到企业正式上线，还需要补哪些主体、合规、支付和提审工作。",
+    render: () => `
+      <div class="card">
+        <div class="card-title">阶段路径总览</div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>阶段</th><th>目标</th><th>当前状态 / 需要完成</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>个人开发阶段</td><td>完成需求确认、Demo、业务闭环验证</td><td>当前已完成 Demo、PRD、功能边界、权限和主要闭环逻辑</td></tr>
+              <tr><td>企业准备阶段</td><td>补齐主体、认证、备案、类目、支付、合规资料</td><td>需要注册企业主体小程序、完成认证与备案</td></tr>
+              <tr><td>正式上线阶段</td><td>接正式 AppID、正式支付、提审并发布</td><td>需要完成正式环境接入和微信审核发布</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="split" style="margin-top:18px;">
+        <div class="card">
+          <div class="card-title">上线前必须准备的手续</div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>事项</th><th>是否必须</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>企业或个体主体小程序账号</td><td>必须</td><td>商业项目不建议长期使用个人主体上线</td></tr>
+                <tr><td>微信认证</td><td>必须</td><td>很多小程序能力和支付依赖认证</td></tr>
+                <tr><td>小程序备案</td><td>必须</td><td>未备案不能正常发布上线</td></tr>
+                <tr><td>服务类目设置</td><td>必须</td><td>类目必须和教学/服务实际业务一致</td></tr>
+                <tr><td>管理员 / 开发者 / 体验者配置</td><td>必须</td><td>用于协作开发、真机调试和提审</td></tr>
+                <tr><td>隐私政策 / 用户协议 / 收费说明</td><td>必须</td><td>审核和合规都需要</td></tr>
+                <tr><td>微信支付商户号</td><td>若收费则必须</td><td>KotobaLink 有会员、课程、活动收费，基本需要</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">需要提前准备的资料</div>
+          <div class="list">
+            <div class="list-item"><div class="list-title">主体资料</div><div class="muted">营业执照、法人/经营者信息、联系人手机号、联系邮箱。</div></div>
+            <div class="list-item"><div class="list-title">小程序资料</div><div class="muted">小程序名称、Logo、简介、管理员微信、服务类目。</div></div>
+            <div class="list-item"><div class="list-title">合规资料</div><div class="muted">用户协议、隐私政策、收费说明、退款规则、联系方式。</div></div>
+            <div class="list-item"><div class="list-title">支付资料</div><div class="muted">微信支付商户号、结算账户、商户联系人、证书与密钥。</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <div class="card-title">小程序备案详细说明</div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>事项</th><th>为什么要做</th><th>需要准备什么</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>小程序备案</td><td>未备案不能正常发布上线</td><td>主体信息、负责人信息、服务内容说明、服务器信息</td></tr>
+              <tr><td>备案信息一致性</td><td>备案、主体、类目、实际功能必须一致</td><td>课程、会员、活动、作业、督学等业务描述要与实际页面一致</td></tr>
+              <tr><td>备案后变更管理</td><td>后续主体或服务范围变化可能影响持续运营</td><td>名称、主体、服务范围变化时要重新核对备案要求</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <div class="card-title">配置项详细说明</div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>配置项</th><th>作用</th><th>上线前要求</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>正式 AppID</td><td>小程序正式身份标识</td><td>必须切换到企业主体的正式 AppID</td></tr>
+              <tr><td>request 合法域名</td><td>允许小程序访问后端接口</td><td>正式后端域名需配置到后台白名单</td></tr>
+              <tr><td>upload 合法域名</td><td>承接作业音频、图片等上传</td><td>上传服务或对象存储域名需提前配置</td></tr>
+              <tr><td>业务域名</td><td>承接协议页、说明页等网页内容</td><td>若有 H5 页面，也要加入业务域名</td></tr>
+              <tr><td>消息与回调配置</td><td>承接任务提醒、支付通知等</td><td>正式环境需使用生产回调地址和正式配置</td></tr>
+              <tr><td>开发者 / 体验者配置</td><td>支持协作和真机测试</td><td>上线前需要配置测试人员、教务和运营体验账号</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <div class="card-title">审核详细说明</div>
+        <div class="list">
+          <div class="list-item"><div class="list-title">审核重点</div><div class="muted">审核会看主体、类目、页面功能、收费链路、隐私政策、用户协议与实际业务是否一致。</div></div>
+          <div class="list-item"><div class="list-title">KotobaLink 的重点关注项</div><div class="muted">课程收费、会员权益、活动报名、作业上传、学习档案、提醒服务、退款说明都要写清楚。</div></div>
+          <div class="list-item"><div class="list-title">审核前最好准备</div><div class="muted">测试账号、测试路径、隐私政策、用户协议、收费说明、退款规则、客服联系方式。</div></div>
+          <div class="list-item"><div class="list-title">常见风险</div><div class="muted">类目不匹配、收费说明不清、隐私收集说明不完整、页面承诺和实际功能对不上。</div></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <div class="card-title">微信支付商户号详细说明</div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>事项</th><th>说明</th><th>对 KotobaLink 的意义</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>为什么需要商户号</td><td>小程序内正式收费要通过微信支付商户体系收款</td><td>会员、课程、活动三类商品都依赖正式收款能力</td></tr>
+              <tr><td>开通前提</td><td>通常要求主体已认证，并具备可结算账户</td><td>没有商户号就只能停留在 Demo 或 mock 支付阶段</td></tr>
+              <tr><td>核心准备资料</td><td>主体信息、结算账户、联系人、商户资料、证书和密钥</td><td>后端要接支付回调、签名和订单状态流转</td></tr>
+              <tr><td>AppID 绑定</td><td>正式小程序 AppID 需要与正式商户号绑定</td><td>购课、会员开通、活动报名才能在正式环境支付</td></tr>
+              <tr><td>上线前联调</td><td>必须验证下单、支付成功、回调、退款状态更新</td><td>否则课程权益、会员权益和订单状态会对不上</td></tr>
+              <tr><td>退款处理</td><td>你当前方案是人工审核退款，但系统仍要记录退款状态</td><td>商户号和后台要支持退款申请、人工判定和状态留痕</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `,
+  },
+  scenario: {
+    title: "演示シナリオ",
+    subtitle: "按闭环、角色和权限整理的演示脚本",
+    tip: "这页不是给客户操作的系统页，而是给演示者快速对齐需求、页面和角色权限的说明文档。",
+    render: () => `
+      <div class="card">
+        <div class="card-title">角色驱动的闭环总览</div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>闭环</th><th>谁先发起</th><th>角色链路</th><th>系统实现功能</th><th>形成结果</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>转化闭环</td><td>访客</td><td>访客 -> 教务/运营 -> 学员 -> 系统</td><td>咨询线索、学员管理、课程页、支付成功页、会员权益规则</td><td>用户进入课程服务期并获得会员权益</td></tr>
+              <tr><td>教学闭环</td><td>教务/运营</td><td>教务/运营 -> 教师 -> 学员</td><td>课程管理、班级管理、我的课表、作业批改</td><td>课程成功交付到班级和学员端</td></tr>
+              <tr><td>督学闭环</td><td>系统</td><td>系统 -> 学员 -> 教师/教务运营</td><td>每日任务、小程序消息、教学仪表盘、学习进度、跟进任务</td><td>异常学员进入持续督学和提醒流程</td></tr>
+              <tr><td>反馈留存闭环</td><td>学员</td><td>学员 -> 教师 -> 系统 -> 教务/运营</td><td>作业页、作业批改、学习档案、学员管理、订单/退款</td><td>学习记录沉淀为服务和续费依据</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="split" style="margin-top:18px;">
+        <div class="card">
+          <div class="card-title">角色与实现功能对照</div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>角色</th><th>主要操作</th><th>当前 Demo 已实现功能</th><th>权限边界</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>访客</td><td>查看课程、发起咨询、购买课程</td><td>课程页、支付成功页、咨询线索入口</td><td>不进入后台，不接触学习数据</td></tr>
+                <tr><td>学员/会员</td><td>查看课表、完成任务、提交作业、看档案</td><td>首页、课程、任务、消息、作业、学习档案</td><td>只操作自己的学习服务内容</td></tr>
+                <tr><td>教师</td><td>查看班级、批改作业、跟进学习进度</td><td>教学工作台、班级管理、作业批改、学习进度跟进</td><td>不处理订单、退款、会员权益和活动运营</td></tr>
+                <tr><td>教务/运营</td><td>建学员、建班级、排课、跟进、退款、续费</td><td>咨询线索、学员管理、班级管理、订单、退款、活动、跟进任务</td><td>不处理系统底层配置和角色权限</td></tr>
+                <tr><td>管理员</td><td>监管经营结果和系统规则</td><td>管理总览、课程、资源、系统管理</td><td>课程/资源以只读监管为主，负责系统配置</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">怎么读这页</div>
+          <div class="list">
+            <div class="list-item"><div class="list-title">先看闭环</div><div class="muted">先确认这个闭环从哪个角色开始，由哪些角色接力完成。</div></div>
+            <div class="list-item"><div class="list-title">再看操作</div><div class="muted">每个角色不是抽象身份，而是有明确动作，例如建学员、建班、批改作业、续费跟进。</div></div>
+            <div class="list-item"><div class="list-title">最后看功能</div><div class="muted">每个动作都能落到当前 Demo 已经可演示的页面和功能上。</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <div class="card-title">闭环详细シナリオ</div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>闭环</th><th>角色</th><th>操作</th><th>系统实现功能</th><th>权限应用</th><th>阶段结果</th></tr>
+            </thead>
+            <tbody>
+              <tr><td rowspan="4">转化闭环</td><td>访客</td><td>查看课程、发起咨询</td><td>公众号引流、课程展示、咨询线索</td><td>访客只能提交咨询或直接购买</td><td>形成可跟进线索</td></tr>
+              <tr><td>教务/运营</td><td>跟进线索并创建学员</td><td>咨询线索、学员管理、新建学员</td><td>operator 可建档、记录沟通和安排试听</td><td>线索转正式学员</td></tr>
+              <tr><td>学员</td><td>购买课程</td><td>小程序课程页、支付成功页</td><td>学员只有购买和查看自己的服务权限</td><td>课程服务激活</td></tr>
+              <tr><td>系统</td><td>按课程规则自动激活会员权益</td><td>会员权益规则、订单状态联动</td><td>系统自动生效权益</td><td>学员进入学习流程</td></tr>
+
+              <tr><td rowspan="4">教学闭环</td><td>教务/运营</td><td>创建课程并配置教学内容</td><td>课程管理、资源</td><td>operator 可新建课程和配置资源，admin 只读</td><td>课程可售卖、可交付</td></tr>
+              <tr><td>教务/运营</td><td>新建班级、分班、排课</td><td>班级管理、学员分班、课次安排</td><td>operator 负责班级结构和课次安排</td><td>班级进入运行</td></tr>
+              <tr><td>教师</td><td>查看班级并准备授课</td><td>教学工作台、班级管理</td><td>teacher 只看到自己负责班级</td><td>教学执行准备完成</td></tr>
+              <tr><td>学员</td><td>查看课表与作业</td><td>小程序课表、作业页</td><td>只能看到自己的班级课次和作业</td><td>教学服务落到学员端</td></tr>
+
+              <tr><td rowspan="4">督学闭环</td><td>教务/运营</td><td>配置每日任务模板</td><td>课程管理、资源、教学配置</td><td>operator 负责任务规则和抽题范围</td><td>任务规则生效</td></tr>
+              <tr><td>系统</td><td>生成当日任务并发出提醒</td><td>每日任务、小程序消息</td><td>系统按课程优先抽题</td><td>学员收到学习任务</td></tr>
+              <tr><td>学员</td><td>完成或未完成任务</td><td>小程序任务页</td><td>学员只能提交自己的完成状态</td><td>任务状态写回系统</td></tr>
+              <tr><td>教师 / 教务运营</td><td>查看异常并跟进</td><td>教学仪表盘、学习进度、跟进任务</td><td>teacher 处理教学提醒，operator 处理运营跟进</td><td>形成持续督学机制</td></tr>
+
+              <tr><td rowspan="4">反馈留存闭环</td><td>学员</td><td>提交作业</td><td>小程序作业页</td><td>学员只可提交自己的作业</td><td>作业进入批改池</td></tr>
+              <tr><td>教师</td><td>批改作业并填写反馈</td><td>作业批改、学习进度</td><td>teacher 可点评和填写教学反馈</td><td>教学反馈沉淀</td></tr>
+              <tr><td>系统</td><td>同步到学习档案</td><td>学习档案、学员管理</td><td>系统聚合作业、任务、到课、反馈</td><td>形成长期学习记录</td></tr>
+              <tr><td>教务/运营</td><td>依据档案做服务和续费判断</td><td>学员管理、订单、跟进任务</td><td>operator 可记录续费备注和服务状态</td><td>留存与续费闭环形成</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `,
+  },
   overview: {
     title: "演示总览",
     subtitle: "四条业务闭环一屏看清",
@@ -359,36 +552,54 @@ const views = {
     }),
   },
   "admin-class": {
-    title: "后台班级详情",
-    subtitle: "统一班级模型承载小班与一对一",
-    tip: "这一页强调一对一和小班共用同一套班级模型，降低后期管理复杂度。",
+    title: "后台班级管理",
+    subtitle: "班级列表、排课和教学交付统一管理",
+    tip: "这一页既要讲清班级列表，也要让客户看到班级详情、排课和学员分班是如何落在一起的。",
     render: () => adminPage({
-      breadcrumb: "后台 / 班级与课表 / 班级详情",
-      title: data.student.className,
-      actions: ["班级状态：进行中", "教师：山田老师", ...(state.currentRole === "operator" ? ["支持新建班级"] : [])],
+      breadcrumb: "后台 / 班级与课表 / 班级管理",
+      title: state.currentRole === "teacher" ? "我的班级" : "班级管理",
+      actions: ["在运行班级 3", "本周课次 6", ...(state.currentRole === "operator" ? ["支持新建班级"] : ["教师：山田老师"])],
       permissions: {
-        admin: "可查看全班、教师和运营处理记录。",
+        admin: "可查看班级列表、班级详情、教师安排和整体运行状态。",
         operator: "可编辑班级信息、教师安排、学员分班、排课与请假调课。",
-        teacher: "可查看自己负责班级、课次和学员进度。",
+        teacher: "可查看自己负责班级、课次和学员进度，不处理班级结构性编辑。",
       },
       content: `
-      <div class="card">
-        <span class="tag">精品课程</span><span class="tag">小班课</span>
-        <div class="card-title">${data.student.className}</div>
-        <div class="muted">${data.student.course} / 教师：${data.student.teacher} / 人数上限：8</div>
-        ${state.currentRole === "operator" ? `<div class="cta-row" style="margin-top:14px;"><div class="btn">新建班级</div><div class="btn ghost">编辑班级信息</div><div class="btn ghost">调整教师</div><div class="btn ghost">学员分班</div></div>` : ""}
-      </div>
       <div class="grid cols-2">
         <div class="card">
-          <div class="card-title">课次安排</div>
+          <div class="admin-panel-head">
+            <div>
+              <div class="card-title" style="margin-bottom:4px;">班级列表</div>
+              <div class="muted">${state.currentRole === "teacher" ? "教师只看到自己负责的班级。" : "按课程、教师和状态查看当前班级运行情况。"}</div>
+            </div>
+            <div class="admin-toolbar">
+              <div class="tool-chip">筛选：进行中</div>
+              ${state.currentRole === "operator" ? `<div class="btn">新建班级</div>` : ""}
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>班级</th><th>课程</th><th>教师</th><th>人数</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td>${data.student.className}</td><td>${data.student.course}</td><td>${data.student.teacher}</td><td>6/8</td><td><span class="status">进行中</span></td></tr>
+                <tr><td>2026 春季 2 班</td><td>日语 0 起步基础课</td><td>佐藤老师</td><td>12/15</td><td><span class="status">进行中</span></td></tr>
+                <tr><td>会话强化夜班</td><td>日语生活会话强化班</td><td>山田老师</td><td>0/6</td><td><span class="status warn">待开班</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <span class="tag">精品课程</span><span class="tag">小班课</span>
+          <div class="card-title" style="margin-top:12px;">${data.student.className}</div>
+          <div class="muted">${data.student.course} / 教师：${data.student.teacher} / 人数上限：8</div>
+          ${state.currentRole === "operator" ? `<div class="cta-row" style="margin-top:14px;"><div class="btn">编辑班级信息</div><div class="btn ghost">调整教师</div><div class="btn ghost">学员分班</div></div>` : ""}
+          <div class="card-title" style="margin-top:18px;">课次安排</div>
           <div class="list">${data.schedule.map(item => `<div class="list-item"><div class="list-title">${item.title}</div><div class="muted">${item.date} · ${item.status}</div></div>`).join("")}</div>
           <div class="cta-row">
             ${state.currentRole === "operator" ? `<div class="btn">调整排课</div><div class="btn ghost">处理请假/调课</div>` : ""}
             <div class="btn ghost" data-action="admin-to-homework">查看本班作业</div>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-title">班级学员</div>
+          <div class="card-title" style="margin-top:18px;">班级学员</div>
           <div class="list">
             ${data.classmates.map(item => `<div class="list-item"><div class="list-meta"><div class="list-title">${item.name}</div><span class="status ${item.status === "待跟进" ? "warn" : ""}">${item.status}</span></div><div class="muted">${item.progress}</div></div>`).join("")}
           </div>
@@ -399,19 +610,47 @@ const views = {
     }),
   },
   "admin-student": {
-    title: "后台学员详情",
-    subtitle: "学习和运营信息统一聚合",
-    tip: "这里要把会员状态、学习状态、订单记录和续费跟进串起来讲。",
+    title: "后台学员管理",
+    subtitle: "学员列表、学员档案和服务跟进统一聚合",
+    tip: "这页应该先让客户看到学员列表，再落到具体学员档案、会员状态和学习服务细节。",
     render: () => adminPage({
-      breadcrumb: "后台 / 咨询与学员 / 学员详情",
-      title: data.student.name,
-      actions: ["会员有效", "续费预警：6 月"],
+      breadcrumb: "后台 / 咨询与学员 / 学员管理",
+      title: state.currentRole === "teacher" ? "我的学员" : "学员管理",
+      actions: ["学员总数 32", "在读 16", "续费预警 2"],
       permissions: {
         admin: "查看学员基础资料、会员状态、课程状态和总体经营相关信息，不下钻到具体教学执行细节。",
         operator: "可查看学员档案、学习状态、续费状态和跟进记录，是日常服务主操作者。",
         teacher: "只查看学习进度、作业、每日任务和教师反馈，不展示订单退款和运营跟进信息。",
       },
-      content: renderStudentDetailByRole(),
+      content: `
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="admin-panel-head">
+              <div>
+                <div class="card-title" style="margin-bottom:4px;">${state.currentRole === "teacher" ? "我的学员列表" : "学员列表"}</div>
+                <div class="muted">${state.currentRole === "teacher" ? "教师只看自己负责班级下的学员。" : "支持查看学员状态、课程归属和服务阶段。"}</div>
+              </div>
+              <div class="admin-toolbar">
+                <div class="tool-chip">筛选：在读</div>
+                ${state.currentRole === "operator" ? `<div class="btn">新建学员</div>` : ""}
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>学员</th><th>课程/班级</th><th>会员状态</th><th>当前状态</th></tr></thead>
+                <tbody>
+                  <tr><td>${data.student.name}</td><td>${data.student.course} / ${data.student.className}</td><td>有效</td><td><span class="status">正常学习</span></td></tr>
+                  <tr><td>高桥真由</td><td>日语 0 起步基础课 / 2026 春季 2 班</td><td>即将到期</td><td><span class="status warn">待跟进</span></td></tr>
+                  <tr><td>李可欣</td><td>日语初级精品班 / ${data.student.className}</td><td>有效</td><td><span class="status">作业已点评</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            ${renderStudentDetailByRole()}
+          </div>
+        </div>
+      `,
     }),
   },
   "admin-homework": {
@@ -1351,9 +1590,12 @@ function followupItems() {
 }
 
 const root = document.getElementById("view-root");
+const shellEl = document.getElementById("app-shell");
 const titleEl = document.getElementById("page-title");
 const subtitleEl = document.getElementById("page-subtitle");
 const pageTipEl = document.getElementById("page-demo-tip");
+const sidebarToggle = document.getElementById("sidebar-toggle");
+const topbarSidebarToggle = document.getElementById("topbar-sidebar-toggle");
 const buttons = Array.from(document.querySelectorAll(".nav-btn"));
 const roleButtons = Array.from(document.querySelectorAll(".role-btn"));
 
@@ -1371,6 +1613,7 @@ function applyRoleFilter() {
 
 function renderView(viewKey) {
   const view = views[viewKey] || views.overview;
+  shellEl.classList.toggle("sidebar-collapsed", !!state.sidebarCollapsed);
   titleEl.textContent = view.title;
   subtitleEl.textContent = view.subtitle;
   if (view.tip) {
@@ -1389,6 +1632,14 @@ function renderView(viewKey) {
 
 buttons.forEach((btn) => {
   btn.addEventListener("click", () => renderView(btn.dataset.view));
+});
+
+[sidebarToggle, topbarSidebarToggle].forEach((btn) => {
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    state.sidebarCollapsed = !state.sidebarCollapsed;
+    renderView(document.querySelector(".nav-btn.active")?.dataset.view || "overview");
+  });
 });
 
 roleButtons.forEach((btn) => {

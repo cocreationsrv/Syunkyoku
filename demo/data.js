@@ -80,6 +80,7 @@ window.KOTOBALINK_DEMO_DATA = {
     currentAdminPage: "admin-dashboard",
     currentMiniPage: "mini-home",
     operatorDashboardView: "operations",
+    sidebarCollapsed: false,
   },
   followups: [
     { name: "高桥真由", reason: "昨日每日任务未完成", owner: "运营-A" },
