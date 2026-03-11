@@ -103,6 +103,38 @@ body {
   gap: 8px;
 }
 
+.scenario-entry {
+  margin-bottom: 16px;
+}
+
+.lang-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.lang-btn {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--sidebar-text);
+  border-radius: 12px;
+  padding: 9px 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.lang-btn.active {
+  background: #1677ff;
+  color: #fff;
+  border-color: #1677ff;
+}
+
+.scenario-btn {
+  width: 100%;
+  font-weight: 700;
+}
+
 .role-switcher {
   margin-bottom: 18px;
   padding: 14px;
@@ -499,6 +531,40 @@ p {
   border: 1px solid var(--line);
   border-radius: 14px;
   overflow: hidden;
+}
+
+.table-wrap-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.table-wrap-scroll .table {
+  min-width: 980px;
+}
+
+.focus-toggle-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.enterprise-focus {
+  background: #fff8db;
+  border-color: #f3d372;
+}
+
+.enterprise-focus .table-wrap {
+  border-color: #f3d372;
+}
+
+.enterprise-focus .list-item {
+  background: rgba(255, 248, 219, 0.7);
+  border-radius: 12px;
+}
+
+.list-item.enterprise-item {
+  background: rgba(255, 248, 219, 0.7);
+  border-radius: 12px;
 }
 
 .permission-banner {

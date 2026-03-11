@@ -81,6 +81,8 @@ window.KOTOBALINK_DEMO_DATA = {
     currentMiniPage: "mini-home",
     operatorDashboardView: "operations",
     sidebarCollapsed: false,
+    launchGuideEnterpriseFocus: false,
+    locale: "zh",
   },
   followups: [
     { name: "高桥真由", reason: "昨日每日任务未完成", owner: "运营-A" },
