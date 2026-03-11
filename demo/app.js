@@ -109,7 +109,7 @@ const views = {
           ${state.launchGuideEnterpriseFocus ? tt("关闭企业准备高亮", "企業準備ハイライトを解除") : tt("高亮企业需要准备", "企業側の準備項目を強調表示")}
         </div>
       </div>
-      <div class="card ${state.launchGuideEnterpriseFocus ? "enterprise-focus" : ""}">
+      <div class="card">
         <div class="card-title">${tt("上线前必须准备的事项", "公開前に必ず準備すべき項目")}</div>
         <div class="table-wrap">
           <table class="table">
@@ -117,13 +117,13 @@ const views = {
               <tr><th>${tt("事项", "項目")}</th><th>${tt("是否必须", "必須性")}</th><th>${tt("说明", "説明")}</th></tr>
             </thead>
             <tbody>
-              <tr><td>${tt("企业主体小程序账号", "企業主体のミニアプリ公式アカウント")}</td><td>${tt("必须", "必須")}</td><td>${tt("正式商业项目建议直接使用企业主体", "正式な商用プロジェクトは企業主体で進めるのが望ましい")}</td></tr>
-              <tr><td>${tt("微信认证", "WeChat認証")}</td><td>${tt("必须", "必須")}</td><td>${tt("很多小程序能力和支付依赖认证", "多くの正式機能と決済接続は認証が前提")}</td></tr>
-              <tr><td>${tt("小程序备案", "ミニアプリ備案")}</td><td>${tt("必须", "必須")}</td><td>${tt("未备案通常不能正式发布上线", "備案未完了では通常正式公開できない")}</td></tr>
-              <tr><td>${tt("服务类目设置", "サービスカテゴリ設定")}</td><td>${tt("必须", "必須")}</td><td>${tt("类目必须和教学/服务实际业务一致", "カテゴリは実際の教育・サービス内容と一致する必要がある")}</td></tr>
-              <tr><td>${tt("管理员 / 开发者 / 体验者配置", "管理者／開発者／テスター設定")}</td><td>${tt("必须", "必須")}</td><td>${tt("用于协作开发、真机调试和提审", "共同開発、実機テスト、審査提出に必要")}</td></tr>
-              <tr><td>${tt("隐私政策 / 用户协议 / 收费说明", "プライバシーポリシー／利用規約／料金説明")}</td><td>${tt("必须", "必須")}</td><td>${tt("审核和合规都需要", "審査とコンプライアンスの両方で必要")}</td></tr>
-              <tr><td>${tt("微信支付商户号", "WeChat Pay加盟店アカウント")}</td><td>${tt("若收费则必须", "有料化するなら必須")}</td><td>${tt("KotobaLink 有会员、课程、活动收费，基本需要", "KotobaLink は会員・コース・イベント課金があるため基本的に必要")}</td></tr>
+              <tr class="${state.launchGuideEnterpriseFocus ? "enterprise-item" : ""}"><td>${tt("企业主体小程序账号", "企業主体のミニアプリ公式アカウント")}</td><td>${tt("必须", "必須")}</td><td>${tt("正式商业项目建议直接使用企业主体", "正式な商用プロジェクトは企業主体で進めるのが望ましい")}</td></tr>
+              <tr class="${state.launchGuideEnterpriseFocus ? "enterprise-item" : ""}"><td>${tt("微信认证", "WeChat認証")}</td><td>${tt("必须", "必須")}</td><td>${tt("很多小程序能力和支付依赖认证", "多くの正式機能と決済接続は認証が前提")}</td></tr>
+              <tr class="${state.launchGuideEnterpriseFocus ? "enterprise-item" : ""}"><td>${tt("小程序备案", "ミニアプリ備案")}</td><td>${tt("必须", "必須")}</td><td>${tt("未备案通常不能正式发布上线", "備案未完了では通常正式公開できない")}</td></tr>
+              <tr><td>${tt("服务类目设置", "サービスカテゴリ設定")}</td><td>${tt("必须", "必須")}</td><td>${tt("主要由开发侧按实际业务配置，企业需确认业务描述和类目口径一致", "主に開発側で実際の業務に合わせて設定し、企業側は業務説明とカテゴリの整合を確認する")}</td></tr>
+              <tr><td>${tt("管理员 / 开发者 / 体验者配置", "管理者／開発者／テスター設定")}</td><td>${tt("必须", "必須")}</td><td>${tt("主要由开发侧配置，用于协作开发、真机调试和提审", "主に開発側で設定し、共同開発・実機テスト・審査提出に使う")}</td></tr>
+              <tr><td>${tt("隐私政策 / 用户协议 / 收费说明", "プライバシーポリシー／利用規約／料金説明")}</td><td>${tt("必须", "必須")}</td><td>${tt("通常由开发/产品先整理初稿，企业再确认合规和收费口径", "通常は開発・プロダクト側で初稿を整理し、企業側が最終的にコンプライアンスと料金表現を確認する")}</td></tr>
+              <tr class="${state.launchGuideEnterpriseFocus ? "enterprise-item" : ""}"><td>${tt("微信支付商户号", "WeChat Pay加盟店アカウント")}</td><td>${tt("若收费则必须", "有料化するなら必須")}</td><td>${tt("KotobaLink 有会员、课程、活动收费，基本需要", "KotobaLink は会員・コース・イベント課金があるため基本的に必要")}</td></tr>
             </tbody>
           </table>
         </div>
@@ -159,7 +159,7 @@ const views = {
           </div>
         </div>
       </div>
-      <div class="card ${state.launchGuideEnterpriseFocus ? "enterprise-focus" : ""}" style="margin-top:18px;">
+      <div class="card" style="margin-top:18px;">
         <div class="card-title">${tt("备案详细说明", "備案の詳細説明")}</div>
         <div class="table-wrap">
           <table class="table">
@@ -167,13 +167,14 @@ const views = {
               <tr><th>${tt("项目", "項目")}</th><th>${tt("说明", "説明")}</th><th>${tt("对 KotobaLink 的意义", "KotobaLinkへの意味")}</th></tr>
             </thead>
             <tbody>
-              <tr><td>${tt("是否需要备案", "備案の必要性")}</td><td>${tt("大陆企业主体正式上线通常需要备案", "中国本土企業主体で正式公開する場合、通常は備案が必要")}</td><td>${tt("课程、会员、活动、作业上传、学习档案、提醒服务等业务描述必须和实际页面一致", "コース、会員、イベント、課題アップロード、学習記録、通知サービスなどの説明を実画面と一致させる必要がある")}</td></tr>
-              <tr><td>${tt("备案重点", "備案の重点")}</td><td>${tt("主体信息、负责人信息、服务内容说明、服务器信息", "主体情報、責任者情報、サービス説明、サーバー情報")}</td><td>${tt("业务描述不能写得过于模糊", "業務説明を曖昧に書きすぎないこと")}</td></tr>
+              <tr class="${state.launchGuideEnterpriseFocus ? "enterprise-item" : ""}"><td>${tt("是否需要备案", "備案の必要性")}</td><td>${tt("大陆企业主体正式上线通常需要备案", "中国本土企業主体で正式公開する場合、通常は備案が必要")}</td><td>${tt("课程、会员、活动、作业上传、学习档案、提醒服务等业务描述必须和实际页面一致", "コース、会員、イベント、課題アップロード、学習記録、通知サービスなどの説明を実画面と一致させる必要がある")}</td></tr>
+              <tr class="${state.launchGuideEnterpriseFocus ? "enterprise-item" : ""}"><td>${tt("备案重点", "備案の重点")}</td><td>${tt("主体信息、负责人信息、服务内容说明、服务器信息", "主体情報、責任者情報、サービス説明、サーバー情報")}</td><td>${tt("业务描述不能写得过于模糊", "業務説明を曖昧に書きすぎないこと")}</td></tr>
               <tr><td>${tt("日企备注", "日系企業メモ")}</td><td>${tt("如果主体是日本公司，不能默认完全按大陆企业同流程备案，需单独确认当前要求", "日本企業主体の場合、本土企業と同一フローで備案できると決めつけず、現行要件を別途確認する必要がある")}</td><td>${tt("这是日企版最容易影响上线节奏的节点之一", "日系企業版で公開スケジュールに最も影響しやすい項目の一つ")}</td></tr>
             </tbody>
           </table>
         </div>
       </div>
+      <!--
       <div class="card ${state.launchGuideEnterpriseFocus ? "enterprise-focus" : ""}" style="margin-top:18px;">
         <div class="card-title">${tt("配置项详细说明", "設定項目の詳細説明")}</div>
         <div class="table-wrap">
@@ -215,6 +216,7 @@ const views = {
           <div class="list-item"><div class="list-title">${tt("日企备注", "日系企業メモ")}</div><div class="muted">${tt("如果主体是日本公司，这里最需要先确认的是：是否能直接使用当前主体接商户号，还是需要跨境支付或服务商方案。", "日本企業主体の場合、現在の主体で直接加盟店アカウントを使えるのか、越境決済やサービス事業者方式が必要なのかを最優先で確認すべき。")}</div></div>
         </div>
       </div>
+      -->
       <div class="card" style="margin-top:18px;">
         <div class="card-title">${tt("审核详细说明", "審査の詳細説明")}</div>
         <div class="list">

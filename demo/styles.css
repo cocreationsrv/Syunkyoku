@@ -567,6 +567,10 @@ p {
   border-radius: 12px;
 }
 
+tr.enterprise-item td {
+  background: rgba(255, 248, 219, 0.7);
+}
+
 .permission-banner {
   display: flex;
   justify-content: space-between;
