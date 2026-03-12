@@ -9,6 +9,7 @@ const I18N = {
     roleOperator: "教务/运营",
     roleTeacher: "教师",
     miniAppNav: "小程序体验",
+    personalLaunchNav: "个人上线",
     launchGuideNav: "上线准备",
     currentDemo: "当前演示",
   },
@@ -20,6 +21,7 @@ const I18N = {
     roleOperator: "教務・運営",
     roleTeacher: "教師",
     miniAppNav: "ミニアプリ体験",
+    personalLaunchNav: "個人公開",
     launchGuideNav: "公開準備",
     currentDemo: "現在の表示",
   },
@@ -47,6 +49,7 @@ function applyStaticLocale() {
     ["role-operator-btn", dict.roleOperator],
     ["role-teacher-btn", dict.roleTeacher],
     ["mini-nav-btn", dict.miniAppNav],
+    ["personal-nav-btn", dict.personalLaunchNav],
     ["launch-nav-btn", dict.launchGuideNav],
     ["current-demo-title", dict.currentDemo],
   ];
@@ -100,6 +103,119 @@ const miniWorkspaceTabs = [
 ];
 
 const views = {
+  "personal-launch": {
+    title: () => tt("主体选择：个人 / 个体工商户 / 企业", "主体選択：個人 / 個体工商户 / 企業"),
+    subtitle: () => tt("按 KotobaLink 的业务形态判断哪种主体更适合正式上线", "KotobaLink の業務形態に合わせて、どの主体が正式公開に向くかを整理"),
+    render: () => `
+      <div class="card">
+        <div class="card-title">${tt("结论", "結論")}</div>
+        <div class="list">
+          <div class="list-item">
+            <div class="list-title">${tt("个人主体：适合开发和演示，不适合 KotobaLink 正式收费上线", "個人主体：開発とデモには向くが、KotobaLink の正式課金公開には不向き")}</div>
+            <div class="muted">${tt("个人主体适合做注册、开发、内部测试和轻量展示，但不适合承接你现在这套收费教学服务。", "個人主体は登録、開発、内部テスト、軽量展示には向くが、現在の有料教学サービスの受け皿には向きません。")}</div>
+          </div>
+          <div class="list-item">
+            <div class="list-title">${tt("个体工商户主体：是当前最现实的低成本正式方案", "個体工商户主体：現時点で最も現実的な低コスト正式案")}</div>
+            <div class="muted">${tt("如果暂时不走公司主体，个体工商户主体能比个人主体更稳地承接支付、经营和正式上线。", "当面は会社主体を使わない場合でも、個体工商户主体なら個人主体より安定して決済・運営・正式公開を支えられます。")}</div>
+          </div>
+          <div class="list-item">
+            <div class="list-title">${tt("企业主体：长期最稳", "企業主体：長期的には最も安定")}</div>
+            <div class="muted">${tt("如果后续要扩展品牌、团队、支付、活动和长期服务，企业主体最稳。", "今後ブランド、チーム、決済、イベント、継続サービスを広げるなら、企業主体が最も安定です。")}</div>
+          </div>
+        </div>
+      </div>
+      <div class="split" style="margin-top:18px;">
+        <div class="card">
+          <div class="card-title">${tt("三种主体对比", "3つの主体比較")}</div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>${tt("主体", "主体")}</th>
+                  <th>${tt("能做什么", "できること")}</th>
+                  <th>${tt("主要问题", "主な問題")}</th>
+                  <th>${tt("对 KotobaLink 的适配度", "KotobaLink への適合度")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${tt("个人主体", "個人主体")}</td>
+                  <td>${tt("开发、内部测试、演示、轻量展示", "開発、内部テスト、デモ、軽量展示")}</td>
+                  <td>${tt("不适合承接正式收费教学服务，支付与经营承接都弱", "正式な有料教学サービスの受け皿として弱く、決済と運営体制の面で不安定")}</td>
+                  <td>${tt("不建议正式上线", "正式公開は非推奨")}</td>
+                </tr>
+                <tr>
+                  <td>${tt("个体工商户主体", "個体工商户主体")}</td>
+                  <td>${tt("正式注册、认证、支付、收费上线", "正式登録、認証、決済、有料公開")}</td>
+                  <td>${tt("类目、审核、支付联调仍要做严谨", "カテゴリ、審査、決済連携は引き続き慎重に行う必要がある")}</td>
+                  <td>${tt("当前最现实", "現時点で最も現実的")}</td>
+                </tr>
+                <tr>
+                  <td>${tt("企业主体", "企業主体")}</td>
+                  <td>${tt("最完整的正式经营承接", "最も完全な正式運営の受け皿")}</td>
+                  <td>${tt("准备成本更高，但后续最稳", "準備コストは高いが長期的に最も安定")}</td>
+                  <td>${tt("长期最佳", "長期最適")}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">${tt("为什么个体工商户比个人主体更适合", "なぜ個体工商户主体の方が適しているか")}</div>
+          <div class="list">
+            <div class="list-item"><div class="list-title">${tt("支付接入更成立", "決済接続が成立しやすい")}</div><div class="muted">${tt("微信支付小程序支付的主体范围明确包含个体工商户，这和你的课程、会员、活动收费更匹配。", "WeChat Pay のミニアプリ決済主体には個体工商户が含まれており、コース・会員・イベント課金と整合しやすい。")}</div></div>
+            <div class="list-item"><div class="list-title">${tt("经营主体更自然", "運営主体として自然")}</div><div class="muted">${tt("相比个人主体，个体工商户更适合作为教学服务、退款处理和长期服务的承接主体。", "個人主体よりも、教学サービス、返金対応、継続サービスの受け皿として自然です。")}</div></div>
+            <div class="list-item"><div class="list-title">${tt("仍然不是零成本通道", "それでもゼロコストではない")}</div><div class="muted">${tt("备案、类目、审核、隐私、支付联调仍然都要做，只是路线比个人主体更成立。", "備案、カテゴリ、審査、プライバシー、決済連携は依然必要であり、個人主体より成立しやすいだけです。")}</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <div class="card-title">${tt("判断依据与参考链接", "判断根拠と参考リンク")}</div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>${tt("类别", "区分")}</th>
+                <th>${tt("内容", "内容")}</th>
+                <th>${tt("说明", "説明")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${tt("官方明确", "公式に明示")}</td>
+                <td>${tt("个人主体可注册小程序", "個人主体でもミニアプリ登録は可能")}</td>
+                <td><a href="https://www.pwmapp.com/xiaochengxuzhuce/" target="_blank" rel="noreferrer">PWM 公开整理</a></td>
+              </tr>
+              <tr>
+                <td>${tt("官方明确", "公式に明示")}</td>
+                <td>${tt("小程序支付支持个体工商户主体", "ミニアプリ決済は個体工商户主体に対応")}</td>
+                <td><a href="https://pay.wechatpay.cn/doc/v3/merchant/4015459512" target="_blank" rel="noreferrer">小程序支付快速开始</a></td>
+              </tr>
+              <tr>
+                <td>${tt("官方明确", "公式に明示")}</td>
+                <td>${tt("正式支付接入走微信支付商户体系", "正式決済接続は WeChat Pay 加盟店体系で進む")}</td>
+                <td><a href="https://pay.wechatpay.cn/doc/v3/partner/4012884351" target="_blank" rel="noreferrer">WeChat Pay 接入准备</a></td>
+              </tr>
+              <tr>
+                <td>${tt("官方明确", "公式に明示")}</td>
+                <td>${tt("小微商户/商户进件需要经营主体资料", "小微商戶・加盟店進件は経営主体資料を前提にしている")}</td>
+                <td>
+                  <a href="https://pay.wechatpay.cn/doc/v3/partner/4012165177" target="_blank" rel="noreferrer">小微商户准备</a>
+                  /
+                  <a href="https://pay.wechatpay.cn/doc/v3/partner/4012722249" target="_blank" rel="noreferrer">小微商户进件</a>
+                </td>
+              </tr>
+              <tr>
+                <td>${tt("基于要求的判断", "要件からの判断")}</td>
+                <td>${tt("KotobaLink 更适合个体工商户或企业主体正式上线", "KotobaLink は個体工商户または企業主体での正式公開が向いている")}</td>
+                <td>${tt("这是基于支付、业务形态和长期经营承接方式做的产品判断，不是官方逐字原文。", "これは決済、業務形態、長期運営の受け皿を踏まえたプロダクト判断であり、公式文言の逐語引用ではありません。")}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `,
+  },
   "launch-guide": {
     title: () => tt("小程序上线准备", "ミニアプリ公開準備"),
     subtitle: () => tt("以大陆企业主体为主线，日企差异做备注", "中国本土企業を基準にし、日系企業の差分を注記"),
